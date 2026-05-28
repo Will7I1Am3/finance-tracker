@@ -61,7 +61,7 @@ async def callback(request: Request):
 @router.post("/logout")
 def logout(response: Response):
     _is_prod = os.environ.get("ENVIRONMENT", "development") == "production"
-    response.delete_cookie("session", samesite="none" if _is_prod else "lax")
+    response.delete_cookie("session", samesite="none" if _is_prod else "lax", secure=_is_prod)
     return {"ok": True}
 
 
