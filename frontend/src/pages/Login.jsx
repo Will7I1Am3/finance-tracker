@@ -5,7 +5,7 @@ export default function Login() {
     <div className={styles.container}>
       <h1 className={styles.title}>CC Statement Tracker</h1>
       <p className={styles.subtitle}>Sign in to manage your credit card statements</p>
-      <a href="http://localhost:8000/auth/login" className={styles.button}>
+      <a href={`${import.meta.env.VITE_API_URL ?? "http://localhost:8000"}/auth/login`} className={styles.button}>
         Sign in with Google
       </a>
     </div>

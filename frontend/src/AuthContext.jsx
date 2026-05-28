@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -7,14 +9,14 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/auth/me", { credentials: "include" })
+    fetch(`${BASE_URL}/auth/me`, { credentials: "include" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => { setUser(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
 
   async function logout() {
-    await fetch("http://localhost:8000/auth/logout", {
+    await fetch(`${BASE_URL}/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
