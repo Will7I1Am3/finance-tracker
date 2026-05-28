@@ -1,6 +1,6 @@
 # CC Statement Tracker — Ship with Auth + Live URL
 
-A public-facing credit card statement tracker deployed on Railway. Upload a PDF statement, let Claude Haiku extract the transactions, review and edit them, then save to your personal dashboard. Each user's data is isolated behind Google OAuth. A daily upload cap prevents runaway LLM costs.
+A public-facing credit card statement tracker deployed on Render (backend) and Vercel (frontend). Upload a PDF statement, let Claude Haiku extract the transactions, review and edit them, then save to your personal dashboard. Each user's data is isolated behind Google OAuth. A daily upload cap prevents runaway LLM costs.
 
 **Live URL:** _TBD — will be added after Railway deployment_
 
@@ -26,7 +26,7 @@ No raw PDFs, account numbers, card numbers, or SSNs are ever stored. The AI is i
 | Backend | FastAPI (Python) |
 | Frontend | React + Vite |
 | Database | PostgreSQL via Supabase |
-| Hosting | Railway (backend + frontend as separate services) |
+| Hosting | Render (backend) · Vercel (frontend) |
 | Auth | Google OAuth (authlib) |
 | LLM | Anthropic Claude Haiku |
 
@@ -47,7 +47,7 @@ No raw PDFs, account numbers, card numbers, or SSNs are ever stored. The AI is i
 cd backend
 python -m venv .venv
 source .venv/bin/activate
-pip install -r ../requirements.txt
+pip install -r requirements.txt
 ```
 
 Create a `.env` file in the project root:
@@ -67,7 +67,7 @@ BACKEND_URL=http://localhost:8000
 # Max PDF uploads per user per day (prevents runaway LLM costs)
 DAILY_UPLOAD_LIMIT=10
 
-# Set to "production" on Railway (controls SameSite cookie and CORS)
+# Set to "production" on Render (controls SameSite cookie and CORS)
 ENVIRONMENT=development
 ```
 
@@ -76,7 +76,7 @@ ENVIRONMENT=development
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` come from a Google Cloud Console OAuth 2.0 app. The authorized redirect URI must include `http://localhost:8000/auth/callback` for local dev (plus the Railway backend URL for production).
+`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` come from a Google Cloud Console OAuth 2.0 app. The authorized redirect URI must include `http://localhost:8000/auth/callback` for local dev (plus the Render backend URL for production).
 
 Database tables are created automatically on first startup — no manual migration needed.
 
