@@ -47,6 +47,22 @@
   white-space: nowrap;
 }
 
+.usage {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.usageWarn {
+  composes: usage;
+  color: var(--warning);
+}
+
+.usageDanger {
+  composes: usage;
+  color: var(--danger);
+}
+
 .closeBtn {
   flex-shrink: 0;
   background: none;

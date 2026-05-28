@@ -54,17 +54,17 @@ export default function StatementCard({ s, cards, isExpanded, onToggle, onDelete
               {cards.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
             </select>
             <input
+              type="date"
               className={styles.dateInput}
               value={editStmt.period_start}
               onChange={e => setEditStmt(prev => ({ ...prev, period_start: e.target.value }))}
-              placeholder="YYYY-MM-DD"
             />
             <span className={styles.arrow}>→</span>
             <input
+              type="date"
               className={styles.dateInput}
               value={editStmt.period_end}
               onChange={e => setEditStmt(prev => ({ ...prev, period_end: e.target.value }))}
-              placeholder="YYYY-MM-DD"
             />
             <span className={styles.balancePrefix}>$</span>
             <input
@@ -73,7 +73,12 @@ export default function StatementCard({ s, cards, isExpanded, onToggle, onDelete
               onChange={e => setEditStmt(prev => ({ ...prev, statement_balance: e.target.value }))}
             />
             <div className={styles.cardActions}>
-              <button className={styles.primary} onClick={handleSaveStmt} disabled={saving}>
+              <button
+                className={styles.primary}
+                onClick={handleSaveStmt}
+                disabled={saving || !editStmt.period_start || !editStmt.period_end}
+                title={(!editStmt.period_start || !editStmt.period_end) ? "Both period dates are required" : undefined}
+              >
                 {saving ? "…" : "Save"}
               </button>
               <button className={styles.ghost} onClick={e => { e.stopPropagation(); setEditStmt(null); }}>

@@ -28,6 +28,7 @@ export default function StatementDetail({ statementId, statementBalance, periodE
     setAddState(null);
     setEditState({
       txnId: t.id,
+      date: t.date,
       description: t.description,
       category: t.category,
       location: t.location,
@@ -41,6 +42,7 @@ export default function StatementDetail({ statementId, statementBalance, periodE
     onError("");
     try {
       const res = await updateTransaction(editState.txnId, {
+        date: editState.date,
         description: editState.description,
         category: editState.category,
         location: editState.location,
@@ -83,7 +85,7 @@ export default function StatementDetail({ statementId, statementBalance, periodE
   }
 
   async function handleAddTxn() {
-    if (!addState.description.trim() || !addState.amount) return;
+    if (!addState.date || !addState.description.trim() || !addState.amount) return;
     setSaving(true);
     onError("");
     try {
@@ -142,7 +144,14 @@ export default function StatementDetail({ statementId, statementBalance, periodE
             {detail.transactions.map(t =>
               editState?.txnId === t.id ? (
                 <tr key={t.id} className={styles.editRow}>
-                  <td className={styles.dateTd}>{t.date}</td>
+                  <td>
+                    <input
+                      type="date"
+                      className={styles.dateInput}
+                      value={editState.date}
+                      onChange={e => setEditState(prev => ({ ...prev, date: e.target.value }))}
+                    />
+                  </td>
                   <td>
                     <input
                       className={styles.wide}
@@ -175,7 +184,12 @@ export default function StatementDetail({ statementId, statementBalance, periodE
                   </td>
                   <td>
                     <div className={styles.rowActions}>
-                      <button className={styles.primary} onClick={handleSaveEdit} disabled={saving}>
+                      <button
+                        className={styles.primary}
+                        onClick={handleSaveEdit}
+                        disabled={saving || !editState.date}
+                        title={!editState.date ? "Date is required" : undefined}
+                      >
                         {saving ? "…" : "Save"}
                       </button>
                       <button className={styles.ghost} onClick={() => setEditState(null)}>Cancel</button>
@@ -202,7 +216,8 @@ export default function StatementDetail({ statementId, statementBalance, periodE
               <tr className={styles.editRow}>
                 <td>
                   <input
-                    className={styles.loc}
+                    type="date"
+                    className={styles.dateInput}
                     value={addState.date}
                     onChange={e => setAddState(prev => ({ ...prev, date: e.target.value }))}
                   />
@@ -242,7 +257,12 @@ export default function StatementDetail({ statementId, statementBalance, periodE
                 </td>
                 <td>
                   <div className={styles.rowActions}>
-                    <button className={styles.primary} onClick={handleAddTxn} disabled={saving}>
+                    <button
+                      className={styles.primary}
+                      onClick={handleAddTxn}
+                      disabled={saving || !addState.date}
+                      title={!addState.date ? "Date is required" : undefined}
+                    >
                       {saving ? "…" : "Add"}
                     </button>
                     <button className={styles.ghost} onClick={() => setAddState(null)}>Cancel</button>

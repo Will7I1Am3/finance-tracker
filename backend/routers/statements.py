@@ -35,6 +35,17 @@ def list_statements(
     return [dict(r) for r in rows]
 
 
+@router.get("/usage", summary="Get today's upload count for the current user")
+def get_usage(user: dict = Depends(get_current_user)) -> dict:
+    conn = get_connection()
+    row = conn.execute(
+        "SELECT upload_count FROM usage WHERE user_id = %s AND date = CURRENT_DATE",
+        (user["user_id"],),
+    ).fetchone()
+    conn.close()
+    return {"used": row["upload_count"] if row else 0, "limit": _DAILY_LIMIT}
+
+
 @router.get("/{statement_id}", summary="Get a statement with its transactions")
 def get_statement(statement_id: int, user: dict = Depends(get_current_user)) -> dict:
     conn = get_connection()

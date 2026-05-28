@@ -77,7 +77,7 @@ def update_transaction(
         conn.close()
         raise HTTPException(status_code=404, detail="Transaction not found.")
 
-    for field in ("description", "category", "location", "amount"):
+    for field in ("date", "description", "category", "location", "amount"):
         value = getattr(body, field)
         if value is not None:
             conn.execute(

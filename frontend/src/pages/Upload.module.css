@@ -132,10 +132,17 @@
   background: var(--surface);
 }
 
-.dateTd {
-  white-space: nowrap;
-  color: var(--text-muted);
+.periodField {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.dateInput {
+  padding: 0.2rem 0.4rem;
   font-size: 0.85rem;
+  width: 136px;
 }
 
 .wide {

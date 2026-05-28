@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Upload from "../pages/Upload";
+import { getUploadUsage } from "../api/statements";
 import styles from "./UploadModal.module.css";
 
 const PHASE_META = {
@@ -14,7 +15,25 @@ const PHASE_META = {
 
 export default function UploadModal({ onClose }) {
   const [phase, setPhase] = useState("pick");
+  const [usage, setUsage] = useState(null);
   const meta = PHASE_META[phase] ?? PHASE_META.pick;
+
+  useEffect(() => {
+    getUploadUsage().then(setUsage).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (phase === "preview") {
+      getUploadUsage().then(setUsage).catch(() => {});
+    }
+  }, [phase]);
+
+  const remaining = usage ? usage.limit - usage.used : null;
+  const usageClass =
+    remaining === null ? styles.usage
+    : remaining === 0  ? styles.usageDanger
+    : remaining <= 2   ? styles.usageWarn
+    : styles.usage;
 
   function handleClose() {
     if (phase === "pick" || phase === "done") {
@@ -31,6 +50,11 @@ export default function UploadModal({ onClose }) {
           <div className={styles.headerLeft}>
             <span className={styles.title}>{meta.title}</span>
             <span className={styles.step}>{meta.step}</span>
+            {usage && (
+              <span className={usageClass}>
+                {usage.used} / {usage.limit} uploads today
+              </span>
+            )}
           </div>
           <button className={styles.closeBtn} onClick={handleClose}>× Close</button>
         </div>

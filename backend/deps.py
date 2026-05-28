@@ -4,6 +4,8 @@ from authlib.integrations.starlette_client import OAuth
 from fastapi import HTTPException, Request, Response
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
+from database import get_connection
+
 SESSION_MAX_AGE = 30 * 60  # 30 minutes of inactivity
 
 oauth = OAuth()
@@ -33,6 +35,13 @@ def get_current_user(request: Request, response: Response) -> dict:
             secure=_is_prod,
             max_age=SESSION_MAX_AGE,
         )
+        conn = get_connection()
+        exists = conn.execute(
+            "SELECT 1 FROM users WHERE id = %s", (data["user_id"],)
+        ).fetchone()
+        conn.close()
+        if not exists:
+            raise HTTPException(status_code=401, detail="Not authenticated")
         return data
     except (BadSignature, SignatureExpired):
         raise HTTPException(status_code=401, detail="Not authenticated")

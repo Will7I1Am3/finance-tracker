@@ -12,3 +12,5 @@ export const saveStatement = (body) => post("/statements", body);
 export const updateStatement = (id, body) => patch(`/statements/${id}`, body);
 
 export const deleteStatement = (id) => del(`/statements/${id}`);
+
+export const getUploadUsage = () => get("/statements/usage");

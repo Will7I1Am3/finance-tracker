@@ -1,5 +1,6 @@
 import os
 
+from authlib.integrations.base_client.errors import MismatchingStateError, OAuthError
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 from itsdangerous import URLSafeTimedSerializer
@@ -25,7 +26,10 @@ async def callback(request: Request):
     if request.query_params.get("error"):
         return RedirectResponse(url=_FRONTEND)
 
-    token = await oauth.google.authorize_access_token(request)
+    try:
+        token = await oauth.google.authorize_access_token(request)
+    except (MismatchingStateError, OAuthError):
+        return RedirectResponse(url=f"{_FRONTEND}?auth_error=state_mismatch")
     userinfo = token.get("userinfo")
 
     conn = get_connection()

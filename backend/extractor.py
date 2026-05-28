@@ -70,7 +70,7 @@ Fixed categories — pick exactly one per transaction: {category_list}
 
 Rules:
 - {card_match_instruction}
-- For period_start and period_end: read the billing cycle / statement period printed on the statement (look for labels like "Billing Period", "Statement Period", "Closing Date", "Opening Date"). Do NOT infer these dates from the earliest/latest transaction date.
+- For period_start and period_end: read the billing cycle / statement period printed on the statement (look for labels like "Billing Period", "Statement Period", "Closing Date", "Opening Date"). Do NOT infer these dates from the earliest/latest transaction date. Use empty string "" if the dates are not visible or were redacted.
 - For statement_balance: extract the total amount due for this billing cycle (look for "New Balance", "Statement Balance", "Total Amount Due", "Amount Due", or on Apple Card "Your [Month] Balance"). Use empty string "" if not found.
 - DO NOT extract or include: account numbers, card numbers, SSNs, full name on account, routing numbers, credit limit
 - Skip payment/credit line items (entries that reduce the balance, e.g. "Payment - Thank You", "ACH Deposit", "Online Payment")
@@ -128,11 +128,14 @@ def extract_from_pdf(
 
     return ExtractionResult(
         pdf_hash=pdf_hash,
-        card_name=data["card_name"],
-        period_start=data["period_start"],
-        period_end=data["period_end"],
-        statement_balance=data["statement_balance"],
-        transactions=[Transaction(**t) for t in data["transactions"]],
+        card_name=data.get("card_name") or "",
+        period_start=data.get("period_start") or "",
+        period_end=data.get("period_end") or "",
+        statement_balance=data.get("statement_balance") or "",
+        transactions=[
+            Transaction(**{**t, "date": t.get("date") or ""})
+            for t in data.get("transactions", [])
+        ],
     )
 
 

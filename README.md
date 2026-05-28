@@ -350,6 +350,7 @@ CREATE TABLE usage (
 | `GET` | `/auth/callback` | Google redirects here after auth; sets signed httpOnly session cookie; redirects to frontend |
 | `POST` | `/auth/logout` | Clears the session cookie |
 | `GET` | `/auth/me` | Returns `{ user_id, email }` for the current session, or 401 if not authenticated |
+| `GET` | `/statements/usage` | Returns `{ used, limit }` — today's LLM extraction count vs. the daily cap for the current user |
 | `GET` | `/statements` | List all statements, newest period first. Filter: `?card_name=` |
 | `GET` | `/statements/{id}` | Single statement + its transactions + `transaction_sum` |
 | `POST` | `/statements/upload` | PDF → LLM extraction (preview only, does not save). Accepts optional `original_hash` form field for redacted uploads. Rate limited per user per day. |
@@ -360,7 +361,7 @@ CREATE TABLE usage (
 | `DELETE` | `/statements/{id}` | Delete statement and all its transactions |
 | `POST` | `/statements/{id}/transactions` | Add a single transaction to a saved statement. Returns updated `transaction_sum` + `statement_balance` |
 | `GET` | `/transactions` | List all transactions across all statements. Filter: `?card_name=` |
-| `PATCH` | `/transactions/{id}` | Edit description, category, location, or amount. Returns updated `transaction_sum` + `statement_balance`. If `category` is changed, upserts a record into `category_corrections`. |
+| `PATCH` | `/transactions/{id}` | Edit date, description, category, location, or amount. Returns updated `transaction_sum` + `statement_balance`. If `category` is changed, upserts a record into `category_corrections`. |
 | `DELETE` | `/transactions/{id}` | Delete a transaction. Returns updated `transaction_sum` + `statement_balance` |
 | `GET` | `/cards` | List all cards |
 | `POST` | `/cards` | Add a new card. Duplicate names rejected (409) |
@@ -372,6 +373,24 @@ CREATE TABLE usage (
 `PATCH /statements/{id}` syncs `transactions.card_id` whenever the statement's card is changed, keeping both tables consistent. `DELETE /cards/{id}` guards against both `statements.card_id` and `transactions.card_id` references to avoid FK violations.
 
 > **Note:** Category corrections are only recorded when editing a transaction already saved in the database (via `PATCH /transactions/{id}`). Category changes made during the upload preview are not recorded.
+
+---
+
+## Protections
+
+Several extra safeguards were added beyond the core feature set:
+
+**Stale session detection**
+`get_current_user` (in `deps.py`) verifies the `user_id` from the session cookie against the `users` table on every authenticated request. If the row no longer exists (e.g. after a database wipe or user deletion), the endpoint returns 401 immediately — the frontend reloads and the login page appears rather than returning empty or broken data.
+
+**OAuth state mismatch handling**
+If Google's OAuth callback arrives with a state that doesn't match the session (e.g. the user clicked sign-in twice, used the back button mid-flow, or had a stale browser cookie), authlib raises a `MismatchingStateError`. Previously this caused a 500. It is now caught in `/auth/callback` and redirects back to the frontend gracefully so the user can try again.
+
+**Required date fields throughout**
+The LLM is instructed to return empty strings rather than fabricate dates it cannot read (e.g. if the billing period was redacted). The review UI enforces that all date fields — billing period start/end and every transaction date — are filled in before saving is allowed. The same enforcement applies in the Statements edit flow: period date inputs are `type="date"` pickers and the Save button is disabled until both are filled. Transaction date is also editable (and required) when editing or adding a row inline.
+
+**Upload count display**
+The upload modal fetches `GET /statements/usage` on open and after each extraction, showing the user their current daily count (e.g. `3 / 10 uploads today`). The counter turns amber at 2 remaining and red at 0, so users are warned before hitting the rate limit.
 
 ---
 

@@ -28,6 +28,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
 
   // Preview phase
   const [extraction, setExtraction] = useState(null);
+  const [previewPeriodStart, setPreviewPeriodStart] = useState("");
+  const [previewPeriodEnd, setPreviewPeriodEnd] = useState("");
   const [previewBalance, setPreviewBalance] = useState("");
   const [previewCardMode, setPreviewCardMode] = useState("");
   const [previewCardInput, setPreviewCardInput] = useState("");
@@ -203,6 +205,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
       const freshCards = await getCards().catch(() => cards);
       setCards(freshCards);
       setExtraction(result);
+      setPreviewPeriodStart(result.period_start || "");
+      setPreviewPeriodEnd(result.period_end || "");
       setPreviewBalance(result.statement_balance);
       setTxns(result.transactions.map((t, i) => ({ ...t, _key: i })));
       const matched = freshCards.find(c => c.name === result.card_name);
@@ -255,8 +259,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
       await saveStatement({
         pdf_hash: extraction.pdf_hash,
         card_name: previewCardName,
-        period_start: extraction.period_start,
-        period_end: extraction.period_end,
+        period_start: previewPeriodStart,
+        period_end: previewPeriodEnd,
         statement_balance: previewBalance,
         transactions: txns.map(({ _key, ...t }) => t),
       });
@@ -278,7 +282,7 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
   function addTxn() {
     setTxns(prev => [...prev, {
       _key: Date.now(),
-      date: extraction.period_end,
+      date: previewPeriodEnd || "",
       description: "",
       category: "Misc",
       location: "",
@@ -292,6 +296,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
     setPages([]);
     setRects({});
     setExtraction(null);
+    setPreviewPeriodStart("");
+    setPreviewPeriodEnd("");
     setTxns([]);
     setError("");
     setStatus("");
@@ -299,6 +305,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
 
   const txnSum = txns.reduce((acc, t) => acc + (parseFloat(t.amount) || 0), 0);
   const balanceMismatch = previewBalance && Math.abs(txnSum - parseFloat(previewBalance)) > 0.01;
+  const canSave = !!previewCardName && !!previewPeriodStart && !!previewPeriodEnd
+    && txns.every(t => !!t.date);
   const totalRects = Object.values(rects).reduce((sum, arr) => sum + arr.length, 0);
 
   // ── Render: done ────────────────────────────────────────────────────────────
@@ -338,7 +346,22 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
                 />
               )}
             </span>
-            <span><strong>Period:</strong> {extraction.period_start} → {extraction.period_end}</span>
+            <span className={styles.periodField}>
+              <strong>Period:</strong>
+              <input
+                type="date"
+                className={styles.dateInput}
+                value={previewPeriodStart}
+                onChange={e => setPreviewPeriodStart(e.target.value)}
+              />
+              →
+              <input
+                type="date"
+                className={styles.dateInput}
+                value={previewPeriodEnd}
+                onChange={e => setPreviewPeriodEnd(e.target.value)}
+              />
+            </span>
             <span className={styles.balanceField}>
               <strong>Statement balance: $</strong>
               <input
@@ -367,7 +390,11 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
             <tbody>
               {txns.map((t, i) => (
                 <tr key={t._key}>
-                  <td className={styles.dateTd}>{t.date}</td>
+                  <td>
+                    <input type="date" className={styles.dateInput}
+                      value={t.date}
+                      onChange={e => updateTxn(i, "date", e.target.value)} />
+                  </td>
                   <td>
                     <input className={styles.wide} value={t.description}
                       onChange={e => updateTxn(i, "description", e.target.value)} />
@@ -401,7 +428,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
           <button
             className={styles.primary}
             onClick={handleSave}
-            disabled={phase === "saving"}
+            disabled={phase === "saving" || !canSave}
+            title={!canSave ? "Fill in all required dates before saving" : undefined}
           >
             {phase === "saving" ? "Saving…" : `Confirm & Save (${txns.length} transactions)`}
           </button>

@@ -53,6 +53,7 @@ class UpdateStatementRequest(BaseModel):
 
 
 class UpdateTransactionRequest(BaseModel):
+    date: Optional[str] = None
     description: Optional[str] = None
     category: Optional[str] = None
     location: Optional[str] = None
