@@ -1,0 +1,371 @@
+.page {
+  max-width: 960px;
+}
+
+/* ── Pick phase card ── */
+
+.pickCard {
+  max-width: 540px;
+  margin: 2rem auto 0;
+  padding: 2rem 2.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.pickCard h1 {
+  margin-bottom: 0.75rem;
+}
+
+/* ── Upload form ── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.fileLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.fileLabel input {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.7rem;
+}
+
+/* ── Preview ── */
+
+.previewHeader {
+  margin-bottom: 1.25rem;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.cardField {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.cardField select,
+.cardField input {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.balanceField {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.balanceInput {
+  width: 90px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9rem;
+}
+
+.mismatch {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* ── Transaction table ── */
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: var(--surface);
+}
+
+.dateTd {
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.wide {
+  width: 100%;
+  min-width: 180px;
+}
+
+.loc {
+  width: 56px;
+}
+
+.amount {
+  width: 80px;
+  text-align: right;
+}
+
+.removeBtn {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.removeBtn:hover {
+  color: var(--danger);
+}
+
+/* ── Annotate phase ── */
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.infoBar {
+  font-size: 0.875rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.6;
+}
+
+.infoBar strong {
+  color: var(--text-strong);
+}
+
+.infoBar em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.filename {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+
+.pageNav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.navBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.navBtn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.canvasWrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+  background: #888;
+  user-select: none;
+}
+
+.pageImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.overlayBusy {
+  cursor: wait;
+}
+
+.bottomNav {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+  border: 1px solid var(--border);
+  border-top: none;
+  background: var(--surface);
+  border-radius: 0 0 6px 6px;
+  margin-bottom: 0.75rem;
+}
+
+.annotateActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.actionRight {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.secondary {
+  padding: 0.55rem 1.2rem;
+  background: none;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ── Shared buttons / misc ── */
+
+.addRow {
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.addRow:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.ghost {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.ghost:hover {
+  background: var(--border);
+}
+
+.error {
+  color: var(--danger);
+  margin-bottom: 0.25rem;
+}
+
+.done {
+  max-width: 480px;
+}
+
+.done p {
+  margin: 0.75rem 0 1.5rem;
+  color: var(--text-muted);
+}

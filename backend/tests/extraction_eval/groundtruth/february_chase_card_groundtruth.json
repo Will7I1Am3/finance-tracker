@@ -1,0 +1,50 @@
+{
+  "card_name": "Chase Card",
+  "period_start": "2026-02-05",
+  "period_end": "2026-03-04",
+  "statement_balance": "395.05",
+  "transactions": [
+    {
+      "date": "2026-02-04",
+      "description": "PARCHMENT-UNIV DOCS",
+      "location": "AZ",
+      "category": "Misc",
+      "amount": "5.00"
+    },
+    {
+      "date": "2026-02-07",
+      "description": "UCSD PARKING MOBILE EBIZ",
+      "location": "CA",
+      "category": "Transportation",
+      "amount": "2.25"
+    },
+    {
+      "date": "2026-02-07",
+      "description": "AMAZON MKTPL*VF7VV3TF3",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "21.33"
+    },
+    {
+      "date": "2026-02-20",
+      "description": "AMAZON MKTPL*B950865T2",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "36.07"
+    },
+    {
+      "date": "2026-02-21",
+      "description": "UCSD PARKING",
+      "location": "CA",
+      "category": "Transportation",
+      "amount": "300.00"
+    },
+    {
+      "date": "2026-02-28",
+      "description": "AMAZON MKTPL*B92PQ50M0",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "30.40"
+    }
+  ]
+}

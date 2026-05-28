@@ -1,0 +1,57 @@
+[
+  {
+    "pdf": "documents/february_chase_card.pdf",
+    "card": "Chase Card",
+    "valid": true,
+    "groundtruth": "groundtruth/february_chase_card_groundtruth.json"
+  },
+  {
+    "pdf": "documents/february_citi_card.pdf",
+    "card": "Citi Card",
+    "valid": true,
+    "groundtruth": "groundtruth/february_citi_card_groundtruth.json"
+  },
+  {
+    "pdf": "documents/march_apple_card.pdf",
+    "card": "Apple Card",
+    "valid": true,
+    "groundtruth": "groundtruth/march_apple_card_groundtruth.json"
+  },
+  {
+    "pdf": "documents/march_chase_card.pdf",
+    "card": "Chase Card",
+    "valid": true,
+    "groundtruth": "groundtruth/march_chase_card_groundtruth.json"
+  },
+  {
+    "pdf": "documents/march_citi_card.pdf",
+    "card": "Citi Card",
+    "valid": true,
+    "groundtruth": "groundtruth/march_citi_card_groundtruth.json"
+  },
+  {
+    "pdf": "documents/february_chase_bank.pdf",
+    "card": "Chase",
+    "valid": false
+  },
+  {
+    "pdf": "documents/march_chase_bank.pdf",
+    "card": "Chase",
+    "valid": false
+  },
+  {
+    "pdf": "documents/march_amex_savings.pdf",
+    "card": "Amex",
+    "valid": false
+  },
+  {
+    "pdf": "documents/assignment2.pdf",
+    "card": "Unknown",
+    "valid": false
+  },
+  {
+    "pdf": "documents/march_boa_bank.pdf",
+    "card": "Bank of America",
+    "valid": false
+  }
+]

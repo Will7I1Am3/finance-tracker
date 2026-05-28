@@ -1,0 +1,120 @@
+{
+  "card_name": "Citi Card",
+  "period_start": "2026-03-05",
+  "period_end": "2026-04-03",
+  "statement_balance": "537.76",
+  "transactions": [
+    {
+      "date": "2026-03-06",
+      "description": "COSTCO GAS #0401",
+      "location": "CA",
+      "category": "Gas",
+      "amount": "41.73"
+    },
+    {
+      "date": "2026-03-07",
+      "description": "TST*VIET NOM",
+      "location": "CA",
+      "category": "Food",
+      "amount": "92.41"
+    },
+    {
+      "date": "2026-03-08",
+      "description": "SAN DIEGO BUILDING SERVICS",
+      "location": "CA",
+      "category": "Transportation",
+      "amount": "15.00"
+    },
+    {
+      "date": "2026-03-11",
+      "description": "SQ *FAN-FAN",
+      "location": "CA",
+      "category": "Food",
+      "amount": "14.44"
+    },
+    {
+      "date": "2026-03-15",
+      "description": "SQ *FAN-FAN",
+      "location": "CA",
+      "category": "Food",
+      "amount": "12.42"
+    },
+    {
+      "date": "2026-03-24",
+      "description": "HIGH FLYING FOODS - TACO",
+      "location": "CA",
+      "category": "Food",
+      "amount": "15.93"
+    },
+    {
+      "date": "2026-03-24",
+      "description": "COSTCO GAS #0401",
+      "location": "CA",
+      "category": "Gas",
+      "amount": "42.86"
+    },
+    {
+      "date": "2026-03-26",
+      "description": "KYO MATCHA BOSTON",
+      "location": "MA",
+      "category": "Food",
+      "amount": "10.70"
+    },
+    {
+      "date": "2026-03-27",
+      "description": "TST* GYU-KAKU - BOSTON",
+      "location": "MA",
+      "category": "Food",
+      "amount": "47.36"
+    },
+    {
+      "date": "2026-03-27",
+      "description": "UEP*HAPPY LAMB HOT POT",
+      "location": "MA",
+      "category": "Food",
+      "amount": "49.98"
+    },
+    {
+      "date": "2026-03-28",
+      "description": "NAN XIANG EXPRESS",
+      "location": "MA",
+      "category": "Food",
+      "amount": "23.38"
+    },
+    {
+      "date": "2026-03-29",
+      "description": "SQ *YUME GA ARUKARA",
+      "location": "MA",
+      "category": "Food",
+      "amount": "39.14"
+    },
+    {
+      "date": "2026-03-30",
+      "description": "HUDSON-DUNKIN ST2008",
+      "location": "MA",
+      "category": "Food",
+      "amount": "6.96"
+    },
+    {
+      "date": "2026-04-01",
+      "description": "COSTCO WHSE #0401",
+      "location": "CA",
+      "category": "Groceries",
+      "amount": "3.76"
+    },
+    {
+      "date": "2026-04-01",
+      "description": "COSTCO WHSE #0401",
+      "location": "CA",
+      "category": "Groceries",
+      "amount": "109.49"
+    },
+    {
+      "date": "2026-04-02",
+      "description": "SQ *FAN-FAN",
+      "location": "CA",
+      "category": "Food",
+      "amount": "12.20"
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+.page {
+  max-width: 1050px;
+}
+
+/* ── Page header + period controls (same pattern as Dashboard) ── */
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pageHeader h1 {
+  margin: 0;
+}
+
+.periodControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modeGroup {
+  display: flex;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.modeBtn {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.28rem 0.7rem;
+  border-radius: 5px;
+}
+
+.modeBtn:hover {
+  color: var(--text);
+}
+
+.modeBtnActive {
+  background: var(--surface);
+  color: var(--text-strong);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.navGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navBtn {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: var(--border);
+  color: var(--text-strong);
+}
+
+.navBtn:disabled {
+  opacity: 0.28;
+}
+
+.periodLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  min-width: 168px;
+  text-align: center;
+}
+
+/* ── Summary line ── */
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.summaryCount {
+  color: var(--text-muted);
+}
+
+.summaryDot {
+  color: var(--border);
+}
+
+.summaryTotal {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+/* ── Table ── */
+
+.tableWrap {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.55rem 0.9rem;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table td {
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 1px solid var(--border);
+}
+
+.table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+.dateTd {
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  min-width: 90px;
+}
+
+.cardTd {
+  white-space: nowrap;
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.mutedTd {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.amountTh {
+  text-align: right;
+}
+
+.amountTd {
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Footer total row ── */
+
+.footRow td {
+  border-top: 2px solid var(--border);
+  border-bottom: none;
+  background: var(--surface-2);
+  padding: 0.55rem 0.9rem;
+}
+
+.footLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.footAmount {
+  text-align: right;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Misc ── */
+
+.muted {
+  color: var(--text-muted);
+}
+
+.error {
+  color: var(--danger);
+}

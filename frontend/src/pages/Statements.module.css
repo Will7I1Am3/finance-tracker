@@ -1,0 +1,289 @@
+.page {
+  max-width: 1000px;
+}
+
+.topBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.topBar h1 {
+  margin: 0;
+}
+
+.count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Statement card ── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.cardHeader:hover {
+  background: var(--surface-2);
+}
+
+.cardHeaderOpen {
+  border-bottom: 1px solid var(--border);
+}
+
+.cardInfo {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cardName {
+  font-weight: 600;
+  color: var(--text-strong);
+  min-width: 100px;
+}
+
+.period {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.balance {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.chevron {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* ── Statement edit form (inline in header) ── */
+
+.editStmtForm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.dateInput {
+  width: 110px;
+}
+
+.arrow {
+  color: var(--text-muted);
+}
+
+.balancePrefix {
+  color: var(--text-muted);
+}
+
+.balanceInput {
+  width: 90px;
+}
+
+/* ── Expanded detail ── */
+
+.detail {
+  padding: 1rem 1.25rem;
+}
+
+.metaBar {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mismatch {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* ── Transaction table ── */
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+.editRow td {
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+}
+
+.dateTd {
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.locTd {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.amountTd {
+  text-align: right;
+  font-weight: 500;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.badge {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.wide {
+  width: 100%;
+  min-width: 160px;
+}
+
+.loc {
+  width: 56px;
+}
+
+.amountInput {
+  width: 80px;
+  text-align: right;
+}
+
+.rowActions {
+  display: flex;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+/* ── Buttons ── */
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.ghost:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  font-size: 0.85rem;
+}
+
+.danger:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.addRow {
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.addRow:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.error {
+  color: var(--danger);
+  margin-bottom: 1rem;
+}
+
+.muted {
+  color: var(--text-muted);
+}

@@ -1,0 +1,24 @@
+# sensitive / personal
+documents
+live_documents
+.env
+backend/cc_tracker.db
+
+# meta / system
+.DS_Store
+**/.DS_Store
+__pycache__
+**/__pycache__
+*.pyc
+.pytest_cache
+CLAUDE.md
+PLAN.md
+
+# dependencies & build artifacts
+.venv
+frontend/node_modules
+frontend/dist
+frontend/.vite
+
+# database
+cc_tracker.db

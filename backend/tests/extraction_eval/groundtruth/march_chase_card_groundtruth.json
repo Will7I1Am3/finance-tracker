@@ -1,0 +1,78 @@
+{
+  "card_name": "Chase Card",
+  "period_start": "2026-03-05",
+  "period_end": "2026-04-04",
+  "statement_balance": "346.40",
+  "transactions": [
+    {
+      "date": "2026-03-08",
+      "description": "UCSD PARKING MOBILE EBIZ",
+      "location": "CA",
+      "category": "Transportation",
+      "amount": "1.15"
+    },
+    {
+      "date": "2026-03-08",
+      "description": "UCSD PARKING MOBILE EBIZ",
+      "location": "CA",
+      "category": "Transportation",
+      "amount": "2.25"
+    },
+    {
+      "date": "2026-03-19",
+      "description": "AMAZON PRIME*SI8HU7DP3",
+      "location": "WA",
+      "category": "Subscriptions",
+      "amount": "149.77"
+    },
+    {
+      "date": "2026-03-24",
+      "description": "INTUIT *TURBOTAX",
+      "location": "CA",
+      "category": "Misc",
+      "amount": "35.00"
+    },
+    {
+      "date": "2026-03-27",
+      "description": "Amazon.com*B54TA2K51",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "33.07"
+    },
+    {
+      "date": "2026-03-28",
+      "description": "AMAZON MKTPL*B50CC6ID1",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "22.40"
+    },
+    {
+      "date": "2026-03-27",
+      "description": "MBTA-550037741091-2727",
+      "location": "MA",
+      "category": "Transportation",
+      "amount": "2.40"
+    },
+    {
+      "date": "2026-03-31",
+      "description": "Amazon.com*BG72W7ZY0",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "22.19"
+    },
+    {
+      "date": "2026-04-01",
+      "description": "INTUIT *TURBOTAX",
+      "location": "CA",
+      "category": "Misc",
+      "amount": "50.00"
+    },
+    {
+      "date": "2026-04-02",
+      "description": "AMAZON MKTPL*B71MJ84W2",
+      "location": "WA",
+      "category": "Shopping",
+      "amount": "30.17"
+    }
+  ]
+}

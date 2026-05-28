@@ -1,0 +1,116 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ── Dark theme (default) ── */
+:root,
+[data-theme="dark"] {
+  --bg: #0D0F18;
+  --surface: #161927;
+  --surface-2: #1D2234;
+  --border: #272D42;
+  --text: #A8B0CB;
+  --text-strong: #DCE0EF;
+  --text-muted: #5E6785;
+  --accent: #6875F5;
+  --accent-hover: #7F8BF8;
+  --danger: #F06060;
+  --success: #3ABDA0;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --nav-bg: #111320;
+  --nav-border: #1E2235;
+}
+
+/* ── Light theme ── */
+[data-theme="light"] {
+  --bg: #F2F4FA;
+  --surface: #FFFFFF;
+  --surface-2: #ECEEF7;
+  --border: #D4D8EB;
+  --text: #44495E;
+  --text-strong: #1A1D2E;
+  --text-muted: #8B91A8;
+  --accent: #5466F0;
+  --accent-hover: #4356E4;
+  --danger: #E04545;
+  --success: #2B9E8A;
+  --shadow: 0 1px 3px rgba(80, 90, 160, 0.1), 0 1px 2px rgba(80, 90, 160, 0.06);
+  --nav-bg: #FFFFFF;
+  --nav-border: #D4D8EB;
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3 {
+  color: var(--text-strong);
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+  border: none;
+  border-radius: 7px;
+  padding: 0.45rem 1rem;
+  transition: background 0.15s, color 0.15s, opacity 0.15s, border-color 0.15s;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+input, select, textarea {
+  font: inherit;
+  background: var(--surface-2);
+  color: var(--text-strong);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 0.4rem 0.7rem;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235E6785' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  padding-right: 2rem;
+}

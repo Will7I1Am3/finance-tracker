@@ -1,0 +1,1910 @@
+{
+  "aggregate": {
+    "classification": {
+      "correct": 10,
+      "total": 10
+    },
+    "date": {
+      "hits": 65,
+      "matched": 65,
+      "pct": 100.0
+    },
+    "location": {
+      "hits": 65,
+      "matched": 65,
+      "pct": 100.0
+    },
+    "category": {
+      "hits": 63,
+      "matched": 65,
+      "pct": 96.9
+    },
+    "amount": {
+      "hits": 65,
+      "matched": 65,
+      "pct": 100.0
+    }
+  },
+  "cases": [
+    {
+      "pdf": "documents/february_chase_card.pdf",
+      "card_name": "Chase Card",
+      "expected_valid": true,
+      "actual_valid": true,
+      "classification_ok": true,
+      "rejection_reason": null,
+      "extraction": {
+        "groundtruth_file": "february_chase_card_groundtruth.json",
+        "card_name": "Chase Card",
+        "period_start": {
+          "expected": "2026-02-05",
+          "extracted": "2026-02-05",
+          "ok": true
+        },
+        "period_end": {
+          "expected": "2026-03-04",
+          "extracted": "2026-03-04",
+          "ok": true
+        },
+        "stmt_balance": {
+          "expected": "395.05",
+          "extracted": "395.05",
+          "ok": true
+        },
+        "transaction_count": {
+          "expected": 6,
+          "extracted": 6,
+          "ok": true
+        },
+        "field_accuracy": {
+          "date": {
+            "hits": 6,
+            "matched": 6,
+            "pct": 100.0
+          },
+          "location": {
+            "hits": 6,
+            "matched": 6,
+            "pct": 100.0
+          },
+          "category": {
+            "hits": 5,
+            "matched": 6,
+            "pct": 83.3
+          },
+          "amount": {
+            "hits": 6,
+            "matched": 6,
+            "pct": 100.0
+          }
+        },
+        "balance_check": {
+          "expected": 395.05,
+          "actual": 395.05,
+          "diff": 0.0,
+          "ok": true
+        },
+        "negative_examples": {
+          "leaked": [],
+          "ok": true
+        },
+        "transactions": [
+          {
+            "index": 1,
+            "extracted": {
+              "date": "2026-02-04",
+              "description": "PARCHMENT-UNIV DOCS 480-719-1646",
+              "location": "AZ",
+              "category": "Shopping",
+              "amount": "5.00"
+            },
+            "expected": {
+              "date": "2026-02-04",
+              "description": "PARCHMENT-UNIV DOCS",
+              "location": "AZ",
+              "category": "Misc",
+              "amount": "5.00"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": false,
+              "amount": true
+            }
+          },
+          {
+            "index": 2,
+            "extracted": {
+              "date": "2026-02-07",
+              "description": "UCSD PARKING MOBILE EBIZ 858-534-4223",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "2.25"
+            },
+            "expected": {
+              "date": "2026-02-07",
+              "description": "UCSD PARKING MOBILE EBIZ",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "2.25"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 3,
+            "extracted": {
+              "date": "2026-02-07",
+              "description": "AMAZON MKTPL*VF7VV3TF3 Amzn.com/bill",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "21.33"
+            },
+            "expected": {
+              "date": "2026-02-07",
+              "description": "AMAZON MKTPL*VF7VV3TF3",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "21.33"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 4,
+            "extracted": {
+              "date": "2026-02-20",
+              "description": "AMAZON MKTPL*B950865T2 Amzn.com/bill",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "36.07"
+            },
+            "expected": {
+              "date": "2026-02-20",
+              "description": "AMAZON MKTPL*B950865T2",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "36.07"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 5,
+            "extracted": {
+              "date": "2026-02-21",
+              "description": "UCSD PARKING 858-534-0901",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "300.00"
+            },
+            "expected": {
+              "date": "2026-02-21",
+              "description": "UCSD PARKING",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "300.00"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 6,
+            "extracted": {
+              "date": "2026-02-28",
+              "description": "AMAZON MKTPL*B92PQ50M0 Amzn.com/bill",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "30.40"
+            },
+            "expected": {
+              "date": "2026-02-28",
+              "description": "AMAZON MKTPL*B92PQ50M0",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "30.40"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          }
+        ],
+        "unmatched_extracted": [],
+        "unmatched_expected": []
+      }
+    },
+    {
+      "pdf": "documents/february_citi_card.pdf",
+      "card_name": "Citi Card",
+      "expected_valid": true,
+      "actual_valid": true,
+      "classification_ok": true,
+      "rejection_reason": null,
+      "extraction": {
+        "groundtruth_file": "february_citi_card_groundtruth.json",
+        "card_name": "Citi Card",
+        "period_start": {
+          "expected": "2026-02-05",
+          "extracted": "2026-02-05",
+          "ok": true
+        },
+        "period_end": {
+          "expected": "2026-03-04",
+          "extracted": "2026-03-04",
+          "ok": true
+        },
+        "stmt_balance": {
+          "expected": "370.69",
+          "extracted": "370.69",
+          "ok": true
+        },
+        "transaction_count": {
+          "expected": 14,
+          "extracted": 14,
+          "ok": true
+        },
+        "field_accuracy": {
+          "date": {
+            "hits": 14,
+            "matched": 14,
+            "pct": 100.0
+          },
+          "location": {
+            "hits": 14,
+            "matched": 14,
+            "pct": 100.0
+          },
+          "category": {
+            "hits": 14,
+            "matched": 14,
+            "pct": 100.0
+          },
+          "amount": {
+            "hits": 14,
+            "matched": 14,
+            "pct": 100.0
+          }
+        },
+        "balance_check": {
+          "expected": 370.69,
+          "actual": 370.69,
+          "diff": 0.0,
+          "ok": true
+        },
+        "negative_examples": {
+          "leaked": [],
+          "ok": true
+        },
+        "transactions": [
+          {
+            "index": 1,
+            "extracted": {
+              "date": "2026-02-04",
+              "description": "TAPIOCA EXPRESS",
+              "location": "CA",
+              "category": "Food",
+              "amount": "10.51"
+            },
+            "expected": {
+              "date": "2026-02-04",
+              "description": "TAPIOCA EXPRESS",
+              "location": "CA",
+              "category": "Food",
+              "amount": "10.51"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 2,
+            "extracted": {
+              "date": "2026-02-06",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "1.62"
+            },
+            "expected": {
+              "date": "2026-02-06",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "1.62"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 3,
+            "extracted": {
+              "date": "2026-02-06",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "118.37"
+            },
+            "expected": {
+              "date": "2026-02-06",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "118.37"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 4,
+            "extracted": {
+              "date": "2026-02-06",
+              "description": "COSTCO GAS #0401",
+              "location": "CA",
+              "category": "Gas",
+              "amount": "35.78"
+            },
+            "expected": {
+              "date": "2026-02-06",
+              "description": "COSTCO GAS #0401",
+              "location": "CA",
+              "category": "Gas",
+              "amount": "35.78"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 5,
+            "extracted": {
+              "date": "2026-02-06",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "58.93"
+            },
+            "expected": {
+              "date": "2026-02-06",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "58.93"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 6,
+            "extracted": {
+              "date": "2026-02-10",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "16.21"
+            },
+            "expected": {
+              "date": "2026-02-10",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "16.21"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 7,
+            "extracted": {
+              "date": "2026-02-11",
+              "description": "TAPIOCA EXPRESS",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.47"
+            },
+            "expected": {
+              "date": "2026-02-11",
+              "description": "TAPIOCA EXPRESS",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.47"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 8,
+            "extracted": {
+              "date": "2026-02-12",
+              "description": "TST*DIRTY BIRDS UCSD",
+              "location": "CA",
+              "category": "Food",
+              "amount": "5.98"
+            },
+            "expected": {
+              "date": "2026-02-12",
+              "description": "TST*DIRTY BIRDS UCSD",
+              "location": "CA",
+              "category": "Food",
+              "amount": "5.98"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 9,
+            "extracted": {
+              "date": "2026-02-13",
+              "description": "SQ *CHODANG TOFU",
+              "location": "CA",
+              "category": "Food",
+              "amount": "18.31"
+            },
+            "expected": {
+              "date": "2026-02-13",
+              "description": "SQ *CHODANG TOFU",
+              "location": "CA",
+              "category": "Food",
+              "amount": "18.31"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 10,
+            "extracted": {
+              "date": "2026-02-25",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.05"
+            },
+            "expected": {
+              "date": "2026-02-25",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.05"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 11,
+            "extracted": {
+              "date": "2026-02-27",
+              "description": "TST*VIET NOM",
+              "location": "CA",
+              "category": "Food",
+              "amount": "40.28"
+            },
+            "expected": {
+              "date": "2026-02-27",
+              "description": "TST*VIET NOM",
+              "location": "CA",
+              "category": "Food",
+              "amount": "40.28"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 12,
+            "extracted": {
+              "date": "2026-03-01",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.82"
+            },
+            "expected": {
+              "date": "2026-03-01",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.82"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 13,
+            "extracted": {
+              "date": "2026-03-02",
+              "description": "TAPIOCA EXPRESS",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.47"
+            },
+            "expected": {
+              "date": "2026-03-02",
+              "description": "TAPIOCA EXPRESS",
+              "location": "CA",
+              "category": "Food",
+              "amount": "13.47"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 14,
+            "extracted": {
+              "date": "2026-03-03",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "10.89"
+            },
+            "expected": {
+              "date": "2026-03-03",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "10.89"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          }
+        ],
+        "unmatched_extracted": [],
+        "unmatched_expected": []
+      }
+    },
+    {
+      "pdf": "documents/march_apple_card.pdf",
+      "card_name": "Apple Card",
+      "expected_valid": true,
+      "actual_valid": true,
+      "classification_ok": true,
+      "rejection_reason": null,
+      "extraction": {
+        "groundtruth_file": "march_apple_card_groundtruth.json",
+        "card_name": "Apple Card",
+        "period_start": {
+          "expected": "2026-03-01",
+          "extracted": "2026-03-01",
+          "ok": true
+        },
+        "period_end": {
+          "expected": "2026-03-31",
+          "extracted": "2026-03-31",
+          "ok": true
+        },
+        "stmt_balance": {
+          "expected": "233.90",
+          "extracted": "233.90",
+          "ok": true
+        },
+        "transaction_count": {
+          "expected": 19,
+          "extracted": 19,
+          "ok": true
+        },
+        "field_accuracy": {
+          "date": {
+            "hits": 19,
+            "matched": 19,
+            "pct": 100.0
+          },
+          "location": {
+            "hits": 19,
+            "matched": 19,
+            "pct": 100.0
+          },
+          "category": {
+            "hits": 19,
+            "matched": 19,
+            "pct": 100.0
+          },
+          "amount": {
+            "hits": 19,
+            "matched": 19,
+            "pct": 100.0
+          }
+        },
+        "balance_check": {
+          "expected": 233.9,
+          "actual": 233.9,
+          "diff": 0.0,
+          "ok": true
+        },
+        "negative_examples": {
+          "leaked": [],
+          "ok": true
+        },
+        "transactions": [
+          {
+            "index": 1,
+            "extracted": {
+              "date": "2026-03-02",
+              "description": "McDonalds 11181 4260",
+              "location": "CA",
+              "category": "Food",
+              "amount": "6.46"
+            },
+            "expected": {
+              "date": "2026-03-02",
+              "description": "McDonalds 11181",
+              "location": "CA",
+              "category": "Food",
+              "amount": "6.46"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 2,
+            "extracted": {
+              "date": "2026-03-12",
+              "description": "CHIPOTLE MEX GR ONLINE610",
+              "location": "CA",
+              "category": "Food",
+              "amount": "12.28"
+            },
+            "expected": {
+              "date": "2026-03-12",
+              "description": "Chipotle Mexican Grill Online",
+              "location": "CA",
+              "category": "Food",
+              "amount": "12.28"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 3,
+            "extracted": {
+              "date": "2026-03-14",
+              "description": "UBER *EATS 1455",
+              "location": "CA",
+              "category": "Food",
+              "amount": "26.33"
+            },
+            "expected": {
+              "date": "2026-03-14",
+              "description": "Uber Eats",
+              "location": "CA",
+              "category": "Food",
+              "amount": "26.33"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 4,
+            "extracted": {
+              "date": "2026-03-16",
+              "description": "Subway 17709",
+              "location": "CA",
+              "category": "Food",
+              "amount": "7.53"
+            },
+            "expected": {
+              "date": "2026-03-16",
+              "description": "Subway 17709",
+              "location": "CA",
+              "category": "Food",
+              "amount": "7.53"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 5,
+            "extracted": {
+              "date": "2026-03-18",
+              "description": "BURGER KING #16576",
+              "location": "CA",
+              "category": "Food",
+              "amount": "15.29"
+            },
+            "expected": {
+              "date": "2026-03-18",
+              "description": "Burger King #16576",
+              "location": "CA",
+              "category": "Food",
+              "amount": "15.29"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 6,
+            "extracted": {
+              "date": "2026-03-19",
+              "description": "SQ *FAN-FAN 9625",
+              "location": "CA",
+              "category": "Food",
+              "amount": "4.30"
+            },
+            "expected": {
+              "date": "2026-03-19",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "4.30"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 7,
+            "extracted": {
+              "date": "2026-03-25",
+              "description": "Apple Store LAS VEGAS NV",
+              "location": "NV",
+              "category": "Installments",
+              "amount": "58.29"
+            },
+            "expected": {
+              "date": "2026-03-25",
+              "description": "Apple Store",
+              "location": "NV",
+              "category": "Installments",
+              "amount": "58.29"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 8,
+            "extracted": {
+              "date": "2026-03-26",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "0.70"
+            },
+            "expected": {
+              "date": "2026-03-26",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "0.70"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 9,
+            "extracted": {
+              "date": "2026-03-26",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "1.70"
+            },
+            "expected": {
+              "date": "2026-03-26",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "1.70"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 10,
+            "extracted": {
+              "date": "2026-03-26",
+              "description": "UBER *TRIP 706",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "13.50"
+            },
+            "expected": {
+              "date": "2026-03-26",
+              "description": "Uber Trip",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "13.50"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 11,
+            "extracted": {
+              "date": "2026-03-26",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "expected": {
+              "date": "2026-03-26",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 12,
+            "extracted": {
+              "date": "2026-03-27",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "1.70"
+            },
+            "expected": {
+              "date": "2026-03-27",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "1.70"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 13,
+            "extracted": {
+              "date": "2026-03-27",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "expected": {
+              "date": "2026-03-27",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 14,
+            "extracted": {
+              "date": "2026-03-28",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "0.70"
+            },
+            "expected": {
+              "date": "2026-03-28",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "0.70"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 15,
+            "extracted": {
+              "date": "2026-03-28",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "1.70"
+            },
+            "expected": {
+              "date": "2026-03-28",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "1.70"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 16,
+            "extracted": {
+              "date": "2026-03-28",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "expected": {
+              "date": "2026-03-28",
+              "description": "MBTA-550013605047",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 17,
+            "extracted": {
+              "date": "2026-03-29",
+              "description": "UBER *EATS 1455",
+              "location": "CA",
+              "category": "Food",
+              "amount": "31.73"
+            },
+            "expected": {
+              "date": "2026-03-29",
+              "description": "Uber Eats",
+              "location": "CA",
+              "category": "Food",
+              "amount": "31.73"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 18,
+            "extracted": {
+              "date": "2026-03-30",
+              "description": "MISSION BAY CAR WASH 2572",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "14.00"
+            },
+            "expected": {
+              "date": "2026-03-30",
+              "description": "Mission Bay Car Wash",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "14.00"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 19,
+            "extracted": {
+              "date": "2026-03-30",
+              "description": "UBER *EATS 1455",
+              "location": "CA",
+              "category": "Food",
+              "amount": "30.49"
+            },
+            "expected": {
+              "date": "2026-03-30",
+              "description": "Uber Eats",
+              "location": "CA",
+              "category": "Food",
+              "amount": "30.49"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          }
+        ],
+        "unmatched_extracted": [],
+        "unmatched_expected": []
+      }
+    },
+    {
+      "pdf": "documents/march_chase_card.pdf",
+      "card_name": "Chase Card",
+      "expected_valid": true,
+      "actual_valid": true,
+      "classification_ok": true,
+      "rejection_reason": null,
+      "extraction": {
+        "groundtruth_file": "march_chase_card_groundtruth.json",
+        "card_name": "Chase Card",
+        "period_start": {
+          "expected": "2026-03-05",
+          "extracted": "2026-03-05",
+          "ok": true
+        },
+        "period_end": {
+          "expected": "2026-04-04",
+          "extracted": "2026-04-04",
+          "ok": true
+        },
+        "stmt_balance": {
+          "expected": "346.40",
+          "extracted": "348.40",
+          "ok": false
+        },
+        "transaction_count": {
+          "expected": 10,
+          "extracted": 10,
+          "ok": true
+        },
+        "field_accuracy": {
+          "date": {
+            "hits": 10,
+            "matched": 10,
+            "pct": 100.0
+          },
+          "location": {
+            "hits": 10,
+            "matched": 10,
+            "pct": 100.0
+          },
+          "category": {
+            "hits": 10,
+            "matched": 10,
+            "pct": 100.0
+          },
+          "amount": {
+            "hits": 10,
+            "matched": 10,
+            "pct": 100.0
+          }
+        },
+        "balance_check": {
+          "expected": 348.4,
+          "actual": 348.4,
+          "diff": 0.0,
+          "ok": true
+        },
+        "negative_examples": {
+          "leaked": [],
+          "ok": true
+        },
+        "transactions": [
+          {
+            "index": 1,
+            "extracted": {
+              "date": "2026-03-08",
+              "description": "UCSD PARKING MOBILE EBIZ",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "1.15"
+            },
+            "expected": {
+              "date": "2026-03-08",
+              "description": "UCSD PARKING MOBILE EBIZ",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "1.15"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 2,
+            "extracted": {
+              "date": "2026-03-08",
+              "description": "UCSD PARKING MOBILE EBIZ",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "2.25"
+            },
+            "expected": {
+              "date": "2026-03-08",
+              "description": "UCSD PARKING MOBILE EBIZ",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "2.25"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 3,
+            "extracted": {
+              "date": "2026-03-19",
+              "description": "AMAZON PRIME",
+              "location": "WA",
+              "category": "Subscriptions",
+              "amount": "149.77"
+            },
+            "expected": {
+              "date": "2026-03-19",
+              "description": "AMAZON PRIME*SI8HU7DP3",
+              "location": "WA",
+              "category": "Subscriptions",
+              "amount": "149.77"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 4,
+            "extracted": {
+              "date": "2026-03-24",
+              "description": "INTUIT TURBOTAX",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "35.00"
+            },
+            "expected": {
+              "date": "2026-03-24",
+              "description": "INTUIT *TURBOTAX",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "35.00"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 5,
+            "extracted": {
+              "date": "2026-03-27",
+              "description": "MBTA",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "expected": {
+              "date": "2026-03-27",
+              "description": "MBTA-550037741091-2727",
+              "location": "MA",
+              "category": "Transportation",
+              "amount": "2.40"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 6,
+            "extracted": {
+              "date": "2026-03-27",
+              "description": "Amazon.com",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "33.07"
+            },
+            "expected": {
+              "date": "2026-03-27",
+              "description": "Amazon.com*B54TA2K51",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "33.07"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 7,
+            "extracted": {
+              "date": "2026-03-28",
+              "description": "AMAZON MKTPL",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "22.40"
+            },
+            "expected": {
+              "date": "2026-03-28",
+              "description": "AMAZON MKTPL*B50CC6ID1",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "22.40"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 8,
+            "extracted": {
+              "date": "2026-03-31",
+              "description": "Amazon.com",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "22.19"
+            },
+            "expected": {
+              "date": "2026-03-31",
+              "description": "Amazon.com*BG72W7ZY0",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "22.19"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 9,
+            "extracted": {
+              "date": "2026-04-01",
+              "description": "INTUIT TURBOTAX",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "50.00"
+            },
+            "expected": {
+              "date": "2026-04-01",
+              "description": "INTUIT *TURBOTAX",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "50.00"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 10,
+            "extracted": {
+              "date": "2026-04-02",
+              "description": "AMAZON MKTPL",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "30.17"
+            },
+            "expected": {
+              "date": "2026-04-02",
+              "description": "AMAZON MKTPL*B71MJ84W2",
+              "location": "WA",
+              "category": "Shopping",
+              "amount": "30.17"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          }
+        ],
+        "unmatched_extracted": [],
+        "unmatched_expected": []
+      }
+    },
+    {
+      "pdf": "documents/march_citi_card.pdf",
+      "card_name": "Citi Card",
+      "expected_valid": true,
+      "actual_valid": true,
+      "classification_ok": true,
+      "rejection_reason": null,
+      "extraction": {
+        "groundtruth_file": "march_citi_card_groundtruth.json",
+        "card_name": "Citi Card",
+        "period_start": {
+          "expected": "2026-03-05",
+          "extracted": "2026-03-05",
+          "ok": true
+        },
+        "period_end": {
+          "expected": "2026-04-03",
+          "extracted": "2026-04-03",
+          "ok": true
+        },
+        "stmt_balance": {
+          "expected": "537.76",
+          "extracted": "537.76",
+          "ok": true
+        },
+        "transaction_count": {
+          "expected": 16,
+          "extracted": 16,
+          "ok": true
+        },
+        "field_accuracy": {
+          "date": {
+            "hits": 16,
+            "matched": 16,
+            "pct": 100.0
+          },
+          "location": {
+            "hits": 16,
+            "matched": 16,
+            "pct": 100.0
+          },
+          "category": {
+            "hits": 15,
+            "matched": 16,
+            "pct": 93.8
+          },
+          "amount": {
+            "hits": 16,
+            "matched": 16,
+            "pct": 100.0
+          }
+        },
+        "balance_check": {
+          "expected": 537.76,
+          "actual": 537.76,
+          "diff": 0.0,
+          "ok": true
+        },
+        "negative_examples": {
+          "leaked": [],
+          "ok": true
+        },
+        "transactions": [
+          {
+            "index": 1,
+            "extracted": {
+              "date": "2026-03-06",
+              "description": "COSTCO GAS #0401",
+              "location": "CA",
+              "category": "Gas",
+              "amount": "41.73"
+            },
+            "expected": {
+              "date": "2026-03-06",
+              "description": "COSTCO GAS #0401",
+              "location": "CA",
+              "category": "Gas",
+              "amount": "41.73"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 2,
+            "extracted": {
+              "date": "2026-03-07",
+              "description": "TST*VIET NOM",
+              "location": "CA",
+              "category": "Food",
+              "amount": "92.41"
+            },
+            "expected": {
+              "date": "2026-03-07",
+              "description": "TST*VIET NOM",
+              "location": "CA",
+              "category": "Food",
+              "amount": "92.41"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 3,
+            "extracted": {
+              "date": "2026-03-08",
+              "description": "SAN DIEGO BUILDING SERVICS",
+              "location": "CA",
+              "category": "Misc",
+              "amount": "15.00"
+            },
+            "expected": {
+              "date": "2026-03-08",
+              "description": "SAN DIEGO BUILDING SERVICS",
+              "location": "CA",
+              "category": "Transportation",
+              "amount": "15.00"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": false,
+              "amount": true
+            }
+          },
+          {
+            "index": 4,
+            "extracted": {
+              "date": "2026-03-11",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "14.44"
+            },
+            "expected": {
+              "date": "2026-03-11",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "14.44"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 5,
+            "extracted": {
+              "date": "2026-03-15",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "12.42"
+            },
+            "expected": {
+              "date": "2026-03-15",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "12.42"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 6,
+            "extracted": {
+              "date": "2026-03-24",
+              "description": "HIGH FLYING FOODS - TACO",
+              "location": "CA",
+              "category": "Food",
+              "amount": "15.93"
+            },
+            "expected": {
+              "date": "2026-03-24",
+              "description": "HIGH FLYING FOODS - TACO",
+              "location": "CA",
+              "category": "Food",
+              "amount": "15.93"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 7,
+            "extracted": {
+              "date": "2026-03-24",
+              "description": "COSTCO GAS #0401",
+              "location": "CA",
+              "category": "Gas",
+              "amount": "42.86"
+            },
+            "expected": {
+              "date": "2026-03-24",
+              "description": "COSTCO GAS #0401",
+              "location": "CA",
+              "category": "Gas",
+              "amount": "42.86"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 8,
+            "extracted": {
+              "date": "2026-03-26",
+              "description": "KYO MATCHA BOSTON",
+              "location": "MA",
+              "category": "Food",
+              "amount": "10.70"
+            },
+            "expected": {
+              "date": "2026-03-26",
+              "description": "KYO MATCHA BOSTON",
+              "location": "MA",
+              "category": "Food",
+              "amount": "10.70"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 9,
+            "extracted": {
+              "date": "2026-03-27",
+              "description": "TST* GYU-KAKU - BOSTON BROOKLINE",
+              "location": "MA",
+              "category": "Food",
+              "amount": "47.36"
+            },
+            "expected": {
+              "date": "2026-03-27",
+              "description": "TST* GYU-KAKU - BOSTON",
+              "location": "MA",
+              "category": "Food",
+              "amount": "47.36"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 10,
+            "extracted": {
+              "date": "2026-03-27",
+              "description": "UEP*HAPPY LAMB HOT POT BOSTON",
+              "location": "MA",
+              "category": "Food",
+              "amount": "49.98"
+            },
+            "expected": {
+              "date": "2026-03-27",
+              "description": "UEP*HAPPY LAMB HOT POT",
+              "location": "MA",
+              "category": "Food",
+              "amount": "49.98"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 11,
+            "extracted": {
+              "date": "2026-03-28",
+              "description": "NAN XIANG EXPRESS",
+              "location": "MA",
+              "category": "Food",
+              "amount": "23.38"
+            },
+            "expected": {
+              "date": "2026-03-28",
+              "description": "NAN XIANG EXPRESS",
+              "location": "MA",
+              "category": "Food",
+              "amount": "23.38"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 12,
+            "extracted": {
+              "date": "2026-03-29",
+              "description": "SQ *YUME GA ARUKARA",
+              "location": "MA",
+              "category": "Food",
+              "amount": "39.14"
+            },
+            "expected": {
+              "date": "2026-03-29",
+              "description": "SQ *YUME GA ARUKARA",
+              "location": "MA",
+              "category": "Food",
+              "amount": "39.14"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 13,
+            "extracted": {
+              "date": "2026-03-30",
+              "description": "HUDSON-DUNKIN ST2008",
+              "location": "MA",
+              "category": "Food",
+              "amount": "6.96"
+            },
+            "expected": {
+              "date": "2026-03-30",
+              "description": "HUDSON-DUNKIN ST2008",
+              "location": "MA",
+              "category": "Food",
+              "amount": "6.96"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 14,
+            "extracted": {
+              "date": "2026-04-01",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "109.49"
+            },
+            "expected": {
+              "date": "2026-04-01",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "109.49"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 15,
+            "extracted": {
+              "date": "2026-04-01",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "3.76"
+            },
+            "expected": {
+              "date": "2026-04-01",
+              "description": "COSTCO WHSE #0401",
+              "location": "CA",
+              "category": "Groceries",
+              "amount": "3.76"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          },
+          {
+            "index": 16,
+            "extracted": {
+              "date": "2026-04-02",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "12.20"
+            },
+            "expected": {
+              "date": "2026-04-02",
+              "description": "SQ *FAN-FAN",
+              "location": "CA",
+              "category": "Food",
+              "amount": "12.20"
+            },
+            "field_match": {
+              "date": true,
+              "location": true,
+              "category": true,
+              "amount": true
+            }
+          }
+        ],
+        "unmatched_extracted": [],
+        "unmatched_expected": []
+      }
+    },
+    {
+      "pdf": "documents/february_chase_bank.pdf",
+      "card_name": "Chase",
+      "expected_valid": false,
+      "actual_valid": false,
+      "classification_ok": true,
+      "rejection_reason": "This is a bank checking account statement, not a credit card statement. It shows deposits and electronic withdrawals from a checking account.",
+      "extraction": null
+    },
+    {
+      "pdf": "documents/march_chase_bank.pdf",
+      "card_name": "Chase",
+      "expected_valid": false,
+      "actual_valid": false,
+      "classification_ok": true,
+      "rejection_reason": "This is a bank checking account statement, not a credit card statement. It shows deposits, electronic withdrawals, and fund transfers.",
+      "extraction": null
+    },
+    {
+      "pdf": "documents/march_amex_savings.pdf",
+      "card_name": "Amex",
+      "expected_valid": false,
+      "actual_valid": false,
+      "classification_ok": true,
+      "rejection_reason": "This is a High Yield Savings Account statement, not a credit card statement",
+      "extraction": null
+    },
+    {
+      "pdf": "documents/assignment2.pdf",
+      "card_name": "Unknown",
+      "expected_valid": false,
+      "actual_valid": false,
+      "classification_ok": true,
+      "rejection_reason": "This is an academic assignment document, not a credit card statement.",
+      "extraction": null
+    },
+    {
+      "pdf": "documents/march_boa_bank.pdf",
+      "card_name": "Bank of America",
+      "expected_valid": false,
+      "actual_valid": false,
+      "classification_ok": true,
+      "rejection_reason": "This is a bank deposit account statement, not a credit card statement. It shows checking account activity with deposits and withdrawals.",
+      "extraction": null
+    }
+  ]
+}
