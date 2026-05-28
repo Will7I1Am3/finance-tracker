@@ -87,11 +87,6 @@ cd frontend
 npm install
 ```
 
-Create `frontend/.env.local`:
-```
-VITE_API_URL=http://localhost:8000
-```
-
 ---
 
 ## Running the App

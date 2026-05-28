@@ -22,6 +22,9 @@ async def login(request: Request):
 
 @router.get("/callback")
 async def callback(request: Request):
+    if request.query_params.get("error"):
+        return RedirectResponse(url=_FRONTEND)
+
     token = await oauth.google.authorize_access_token(request)
     userinfo = token.get("userinfo")
 
