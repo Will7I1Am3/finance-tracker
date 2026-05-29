@@ -12,7 +12,7 @@
 ---
 ## Demo Link
 
-[Demo Youtube](NEED TO ADD)
+[Demo Youtube](https://youtu.be/OS6PvKGjmAk)
 
 ---
 
@@ -25,6 +25,7 @@
 - You will land on the Dashboard
 
 ### 2. Upload a statement
+**NOTE**: I have provided some sample personal statements in the google drive folder linked [here](https://drive.google.com/drive/folders/19Jhdq2oeSGdaQ6eMj7sZAuF1a3PkrEqm?usp=sharing). Feel free to use those or upload your own. (The app does not store any PDFs or extracted data persistently, but you can verify that the redaction step works by uploading a statement with sensitive info and checking the redacted version before confirming the upload.) The samples consist of both good (Credit Card Statements) and bad examples (Non-credit card statements) for testing the robustness of the extraction and redaction features.
 - Click the **`+ Upload`** button (bottom-right corner)
 - Select a credit card PDF statement (Apple Card, Chase, or Citi work best)
 - **Step 2 — Optional redaction:** drag to draw black boxes over any sensitive content (account number, name, address). Click a box to remove it. Skip this step if you prefer.

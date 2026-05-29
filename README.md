@@ -6,6 +6,8 @@ A public-facing credit card statement tracker deployed on Render (backend) and V
 
 **Backend API:** https://finance-tracker-f0ld.onrender.com/docs
 
+Demo video link — https://www.youtube.com/watch?v=OS6PvKGjmAk
+
 ---
 
 ## What It Does
