@@ -2,7 +2,9 @@
 
 A public-facing credit card statement tracker deployed on Render (backend) and Vercel (frontend). Upload a PDF statement, let Claude Haiku extract the transactions, review and edit them, then save to your personal dashboard. Each user's data is isolated behind Google OAuth. A daily upload cap prevents runaway LLM costs.
 
-**Live URL:** _TBD — will be added after Railway deployment_
+**Live URL:** https://finance-tracker-smoky-iota.vercel.app
+
+**Backend API:** https://finance-tracker-f0ld.onrender.com/docs
 
 ---
 
@@ -192,9 +194,33 @@ The app is split into a React frontend and a FastAPI backend. They communicate e
   ┌─────────────────────┐
   │  User picks a PDF   │
   └──────────┬──────────┘
-             │  POST /statements/upload
-             │  multipart/form-data
+             │  POST /redact/preview
              ▼
+  ┌──────────────────────────────────────┐
+  │  Backend renders each PDF page as    │
+  │  PNG and returns base64 images       │
+  └──────────────┬───────────────────────┘
+                 │  pages displayed in browser canvas
+                 ▼
+  ┌──────────────────────────────────────┐
+  │  User optionally draws redaction     │
+  │  boxes over sensitive content        │
+  └───────┬──────────────────────────────┘
+          │ boxes drawn?
+          ├─ no ──────────────────────────────────────┐
+          │                                           │
+          │  POST /redact/apply                       │
+          ▼                                           │
+  ┌─────────────────────────────┐                    │
+  │  Backend burns black boxes  │                    │
+  │  into PDF (pymupdf)         │                    │
+  │  returns redacted PDF bytes │                    │
+  └──────────────┬──────────────┘                    │
+                 │                                   │
+                 └──────────────┬────────────────────┘
+                                │  POST /statements/upload
+                                │  (redacted or original PDF)
+                                ▼
   FastAPI Backend
   ┌─────────────────────────────────────┐
   │  Rate limit check (usage table)     │

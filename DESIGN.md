@@ -1,0 +1,13 @@
+# Design Decisions
+
+## Deployment
+
+The backend is hosted on Render and the frontend on Vercel. Railway was the original plan but requires a paid plan after the initial trial, which wasn't worth it since Render is a good alternative for a free option. Also Render already handles the backend deployment easily with the secrets stored on the hosting platform itself and Vercel is a good choice for static content. The two services are split because the frontend is purely static, mainly for displaying and retrieving data, while the backend holds all the business logic, database access, and LLM calls, so they have different hosting requirements. 
+
+## Database + Auth
+
+SQLite was dropped and replaced with PostgreSQL hosted on Supabase. SQLite stores data in a local file which doesn't work in a cloud environment where the server can restart or redeploy at any time and data would be lost. PostgreSQL on Supabase is a persistent, cloud-hosted database that survives redeployments and scales beyond a single server. For authentication, just like before, I kept Google OAuth since Google handles the hard parts of security like password storage, account verification, and session management, and with this setup, the app never sees or stores any user credentials directly except for their email for identifying accounts. This allows for a smoother user experience and reduces the security risks associated with handling passwords on my own backend.
+
+## Redacting Feature + Rate Limiting
+
+A concern with the initial version was that users might hesitate to upload their statements since credit card PDFs contain sensitive personal information like account numbers, full names, and addresses. Thus, I decided to add a redaction step that is integrated directly into the upload flow. Before extraction, users can draw black boxes over any content they want to remove from the PDF. This is better than trying to match regex patterns, which can miss edge cases. The redacted version is what gets sent to the LLM, so sensitive information never reaches the AI. Users can also download the redacted PDF if they want to verify for themselves that the content was properly removed before submitting. Since each extraction makes a real API call to LLM, rate limiting was also added to prevent abuse. Each user is capped at 10 uploads per day (might change later depending on user activity), tracked in the database per user per day. If the limit is hit, the upload is blocked and the user is informed. This keeps LLM costs predictable without cutting off legitimate use.
