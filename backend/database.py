@@ -22,11 +22,13 @@ SCHEMA_STATEMENTS = [
     """
     CREATE TABLE IF NOT EXISTS statements (
         id                SERIAL PRIMARY KEY,
+        user_id           INTEGER NOT NULL REFERENCES users(id),
         card_id           INTEGER NOT NULL REFERENCES cards(id),
         period_start      DATE NOT NULL,
         period_end        DATE NOT NULL,
-        pdf_hash          TEXT NOT NULL UNIQUE,
-        statement_balance TEXT
+        pdf_hash          TEXT NOT NULL,
+        statement_balance TEXT,
+        UNIQUE(user_id, pdf_hash)
     )
     """,
     """

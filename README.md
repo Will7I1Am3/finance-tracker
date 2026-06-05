@@ -80,7 +80,7 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` come from a Google Cloud Console OAuth 2.0 app. The authorized redirect URI must include `http://localhost:8000/auth/callback` for local dev (plus the Render backend URL for production).
 
-Database tables are created automatically on first startup — no manual migration needed.
+Database tables are created automatically on first startup for new deployments. If upgrading an existing deployment, see the Supabase migration SQL in `REVIEW-PLAN.md`.
 
 ### Frontend
 
@@ -275,7 +275,7 @@ Browser (React + Vite)  ──►  FastAPI REST API  ──►  PostgreSQL (Supa
 3. User optionally draws redaction boxes over sensitive content in the browser canvas. Boxes can be removed by clicking.
 4. If boxes were drawn: the frontend computes `SHA-256(original PDF)` in the browser, then POSTs to `POST /redact/apply` to burn the black rectangles into the PDF via pymupdf. The original hash is kept for duplicate detection.
 5. Frontend POSTs the (possibly redacted) PDF to `POST /statements/upload`, including `original_hash` if redacted.
-6. The backend checks the rate limit, checks for a duplicate pdf_hash, fetches existing card names, and sends the PDF to Claude Haiku.
+6. The backend checks the rate limit, checks for a duplicate `(user_id, pdf_hash)` pair, fetches existing card names, and sends the PDF to Claude Haiku.
 7. Claude returns JSON: card name, billing period, statement balance, and a list of transactions.
 8. The backend increments the daily upload count and returns the result as a preview — nothing is saved yet.
 9. The user reviews and edits the extracted transactions. On confirm, the frontend POSTs to `POST /statements`.
@@ -333,11 +333,13 @@ CREATE TABLE cards (
 
 CREATE TABLE statements (
     id                SERIAL PRIMARY KEY,
+    user_id           INTEGER NOT NULL REFERENCES users(id),
     card_id           INTEGER NOT NULL REFERENCES cards(id),
     period_start      DATE NOT NULL,
     period_end        DATE NOT NULL,
-    pdf_hash          TEXT NOT NULL UNIQUE,   -- SHA-256 of the uploaded PDF
-    statement_balance TEXT                    -- total amount due, as a string
+    pdf_hash          TEXT NOT NULL,          -- SHA-256 of the uploaded PDF
+    statement_balance TEXT,                  -- total amount due, as a string
+    UNIQUE(user_id, pdf_hash)                -- same PDF allowed across different users
 );
 
 CREATE TABLE transactions (

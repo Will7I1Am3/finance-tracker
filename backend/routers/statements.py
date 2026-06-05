@@ -125,7 +125,10 @@ async def upload_statement(
         result = result.model_copy(update={"pdf_hash": original_hash})
 
     conn = get_connection()
-    if conn.execute("SELECT 1 FROM statements WHERE pdf_hash = %s", (result.pdf_hash,)).fetchone():
+    if conn.execute(
+        "SELECT 1 FROM statements WHERE user_id = %s AND pdf_hash = %s",
+        (user["user_id"], result.pdf_hash),
+    ).fetchone():
         conn.close()
         raise HTTPException(status_code=409, detail="This statement has already been uploaded.")
 
@@ -144,7 +147,10 @@ async def upload_statement(
 def save_statement(body: SaveRequest, user: dict = Depends(get_current_user)) -> dict:
     conn = get_connection()
 
-    if conn.execute("SELECT 1 FROM statements WHERE pdf_hash = %s", (body.pdf_hash,)).fetchone():
+    if conn.execute(
+        "SELECT 1 FROM statements WHERE user_id = %s AND pdf_hash = %s",
+        (user["user_id"], body.pdf_hash),
+    ).fetchone():
         conn.close()
         raise HTTPException(status_code=409, detail="Already saved.")
 
@@ -167,9 +173,9 @@ def save_statement(body: SaveRequest, user: dict = Depends(get_current_user)) ->
         )
 
     statement_id = conn.execute(
-        "INSERT INTO statements (card_id, period_start, period_end, pdf_hash, statement_balance) "
-        "VALUES (%s, %s, %s, %s, %s) RETURNING id",
-        (card_id, body.period_start, body.period_end, body.pdf_hash, body.statement_balance),
+        "INSERT INTO statements (user_id, card_id, period_start, period_end, pdf_hash, statement_balance) "
+        "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
+        (user["user_id"], card_id, body.period_start, body.period_end, body.pdf_hash, body.statement_balance),
     ).fetchone()["id"]
 
     for t in body.transactions:

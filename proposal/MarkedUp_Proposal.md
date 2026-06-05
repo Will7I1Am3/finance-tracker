@@ -74,7 +74,7 @@ Aside: I will also add a redacting function to the PDF extractor to remove sensi
 
 **Data:**
 
-- All existing tables (`users`, `cards`, `statements`, `transactions`, `category_corrections`) migrated to Postgres via Supabase — same schema, no structural changes.
+- All existing tables (`users`, `cards`, `statements`, `transactions`, `category_corrections`) migrated to Postgres via Supabase. ⚠️ Minor schema change from initial submission: `statements` gained a `user_id INTEGER NOT NULL REFERENCES users(id)` column and the global `UNIQUE(pdf_hash)` constraint was replaced with `UNIQUE(user_id, pdf_hash)` — this scopes duplicate PDF detection per user so different users can upload the same statement file independently.
 - New table: `usage (user_id INTEGER, date DATE, upload_count INTEGER, PRIMARY KEY (user_id, date))` for rate limiting.
 
 ---
