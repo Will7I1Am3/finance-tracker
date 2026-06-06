@@ -17,5 +17,8 @@ export const getUserSignups = (range = "7d", tz = "UTC") =>
 export const getUserActivity = (userId, range = "7d", tz = "UTC") =>
   get(`/admin/users/${userId}/activity?range=${range}&${tzParam(tz)}`);
 
+export const getSiteCosts = (range = "7d", tz = "UTC") =>
+  get(`/admin/costs?range=${range}&${tzParam(tz)}`);
+
 export const resetUserUsage = (userId) => post(`/admin/users/${userId}/reset-usage`, {});
 export const deleteUser = (userId) => del(`/admin/users/${userId}`);

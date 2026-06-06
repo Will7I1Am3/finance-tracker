@@ -12,6 +12,7 @@ import {
   getAdminUsers,
   getSiteActivity,
   getUserSignups,
+  getSiteCosts,
   getUserActivity,
   resetUserUsage,
   deleteUser,
@@ -45,8 +46,9 @@ function RangeToggle({ value, onChange }) {
   );
 }
 
-function ActivityChart({ data, dataKey, color, c }) {
+function ActivityChart({ data, dataKey, color, c, yFormatter }) {
   if (!data.length) return <p className={styles.muted}>No data for this range.</p>;
+  const isCost = !!yFormatter;
   return (
     <ResponsiveContainer width="100%" height={200}>
       <AreaChart data={data} margin={{ top: 16, right: 8, bottom: 8, left: 0 }}>
@@ -57,11 +59,17 @@ function ActivityChart({ data, dataKey, color, c }) {
           </linearGradient>
         </defs>
         <XAxis dataKey="date" tick={{ fill: c.tick, fontSize: 11 }} interval="preserveStartEnd" />
-        <YAxis tick={{ fill: c.tick, fontSize: 11 }} allowDecimals={false} width={30} />
+        <YAxis
+          tick={{ fill: c.tick, fontSize: 11 }}
+          allowDecimals={isCost}
+          width={isCost ? 58 : 30}
+          tickFormatter={yFormatter}
+        />
         <Tooltip
           contentStyle={{ background: c.bg, border: `1px solid ${c.border}`, borderRadius: 8, fontSize: 13 }}
           labelStyle={{ color: c.label, fontWeight: 600 }}
           cursor={{ stroke: c.border, strokeWidth: 1 }}
+          formatter={yFormatter ? (v) => [yFormatter(v)] : undefined}
         />
         <Area
           type="monotone"
@@ -76,6 +84,8 @@ function ActivityChart({ data, dataKey, color, c }) {
     </ResponsiveContainer>
   );
 }
+
+const fmtCost = (v) => `$${Number(v).toFixed(4)}`;
 
 function fmtTs(ts, tz) {
   if (!ts) return null;
@@ -207,8 +217,10 @@ export default function Admin() {
   const [users, setUsers]         = useState([]);
   const [activity, setActivity]   = useState([]);
   const [signups, setSignups]     = useState([]);
+  const [costs, setCosts]         = useState([]);
   const [actRange, setActRange]   = useState("7d");
   const [sigRange, setSigRange]   = useState("7d");
+  const [costRange, setCostRange] = useState("7d");
   const [search, setSearch]       = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [expandedId, setExpandedId]   = useState(null);
@@ -233,6 +245,10 @@ export default function Admin() {
   useEffect(() => {
     getUserSignups(sigRange, resolvedTimezone).then(setSignups).catch(() => setSignups([]));
   }, [sigRange, resolvedTimezone, refreshKey]);
+
+  useEffect(() => {
+    getSiteCosts(costRange, resolvedTimezone).then(setCosts).catch(() => setCosts([]));
+  }, [costRange, resolvedTimezone, refreshKey]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -281,22 +297,43 @@ export default function Admin() {
         ))}
       </div>
 
-      {/* Upload activity chart */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>Upload Activity</h2>
-          <RangeToggle value={actRange} onChange={setActRange} />
+      {/* 2×2 chart grid */}
+      <div className={styles.chartsGrid}>
+        {/* Top left: New Signups */}
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>New Signups</h2>
+            <RangeToggle value={sigRange} onChange={setSigRange} />
+          </div>
+          <ActivityChart data={signups} dataKey="new_users" color="#3ABDA0" c={c} />
         </div>
-        <ActivityChart data={activity} dataKey="uploads" color="#6875F5" c={c} />
-      </div>
 
-      {/* Signup chart */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2>New Signups</h2>
-          <RangeToggle value={sigRange} onChange={setSigRange} />
+        {/* Top right: Upload Activity */}
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>Upload Activity</h2>
+            <RangeToggle value={actRange} onChange={setActRange} />
+          </div>
+          <ActivityChart data={activity} dataKey="uploads" color="#6875F5" c={c} />
         </div>
-        <ActivityChart data={signups} dataKey="new_users" color="#3ABDA0" c={c} />
+
+        {/* Bottom left: Cost per Day */}
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>Cost per Day</h2>
+            <RangeToggle value={costRange} onChange={setCostRange} />
+          </div>
+          <ActivityChart data={costs} dataKey="cost_day" color="#F59E0B" c={c} yFormatter={fmtCost} />
+        </div>
+
+        {/* Bottom right: Cumulative Cost */}
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>Cumulative Cost</h2>
+            <RangeToggle value={costRange} onChange={setCostRange} />
+          </div>
+          <ActivityChart data={costs} dataKey="cost_cumulative" color="#EC4899" c={c} yFormatter={fmtCost} />
+        </div>
       </div>
 
       {/* User management */}

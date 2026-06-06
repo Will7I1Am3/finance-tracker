@@ -49,6 +49,25 @@
   line-height: 1;
 }
 
+/* ── Charts grid ── */
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.chartsGrid .section {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Sections ── */
 
 .section {

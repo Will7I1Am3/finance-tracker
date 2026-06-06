@@ -208,6 +208,45 @@ def user_activity(
     return [{"date": str(r["local_date"]), "uploads": r["uploads"]} for r in rows]
 
 
+@router.get("/costs")
+def site_costs(
+    range: str = "7d",
+    tz: str = Query(default="UTC"),
+    _admin: dict = Depends(get_admin_user),
+) -> list[dict]:
+    tz = _resolve_tz(tz)
+    start = _range_start(range, tz)
+    conn = get_connection()
+
+    params = {"tz": tz}
+    where = f"WHERE {_LOCAL_DATE} >= %(start)s" if start else ""
+    if start:
+        params["start"] = start
+
+    rows = conn.execute(
+        f"SELECT {_LOCAL_DATE} AS local_date,"
+        f" COALESCE(SUM(upload_count), 0) AS uploads,"
+        f" COALESCE(SUM(input_tokens), 0) AS input_tokens,"
+        f" COALESCE(SUM(output_tokens), 0) AS output_tokens"
+        f" FROM usage {where}"
+        f" GROUP BY local_date ORDER BY local_date",
+        params,
+    ).fetchall()
+    conn.close()
+
+    result = []
+    cumulative = 0.0
+    for r in rows:
+        daily = _estimate_cost(r["input_tokens"], r["output_tokens"], r["uploads"])
+        cumulative = round(cumulative + daily, 6)
+        result.append({
+            "date": str(r["local_date"]),
+            "cost_day": round(daily, 6),
+            "cost_cumulative": round(cumulative, 6),
+        })
+    return result
+
+
 @router.post("/users/{user_id}/reset-usage")
 def reset_usage(user_id: int, _admin: dict = Depends(get_admin_user)) -> dict:
     conn = get_connection()
