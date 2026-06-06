@@ -13,6 +13,8 @@ from database import init_db
 from deps import oauth  # noqa: F401 — registers OAuth client at import time
 from routers import admin, auth, cards, redact, statements, transactions
 
+_IS_PROD = os.environ.get("ENVIRONMENT", "development") == "production"
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,3 +39,7 @@ app.include_router(transactions.router)
 app.include_router(cards.router)
 app.include_router(redact.router)
 app.include_router(admin.router)
+
+if not _IS_PROD:
+    from routers import dev
+    app.include_router(dev.router)

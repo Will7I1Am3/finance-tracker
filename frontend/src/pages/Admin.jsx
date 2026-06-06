@@ -221,7 +221,6 @@ export default function Admin() {
   const [actRange, setActRange]   = useState("7d");
   const [sigRange, setSigRange]   = useState("7d");
   const [costRange, setCostRange] = useState("7d");
-  const [search, setSearch]       = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [expandedId, setExpandedId]   = useState(null);
   const [loading, setLoading]         = useState(true);
@@ -232,7 +231,7 @@ export default function Admin() {
   }, [user, navigate]);
 
   useEffect(() => {
-    Promise.all([getAdminStats(resolvedTimezone), getAdminUsers(search, resolvedTimezone)])
+    Promise.all([getAdminStats(resolvedTimezone), getAdminUsers("", resolvedTimezone)])
       .then(([s, u]) => { setStats(s); setUsers(u); })
       .catch(() => setError("Failed to load admin data."))
       .finally(() => setLoading(false));
@@ -250,17 +249,9 @@ export default function Admin() {
     getSiteCosts(costRange, resolvedTimezone).then(setCosts).catch(() => setCosts([]));
   }, [costRange, resolvedTimezone, refreshKey]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setSearch(searchInput.trim());
-    getAdminUsers(searchInput.trim(), resolvedTimezone).then(setUsers).catch(() => {});
-  };
-
-  const handleClearSearch = () => {
-    setSearchInput("");
-    setSearch("");
-    getAdminUsers("", resolvedTimezone).then(setUsers).catch(() => {});
-  };
+  const filteredUsers = searchInput.trim()
+    ? users.filter(u => u.email.toLowerCase().includes(searchInput.toLowerCase()))
+    : users;
 
   const handleResetDone = useCallback((userId) => {
     setUsers(prev =>
@@ -340,7 +331,7 @@ export default function Admin() {
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Users</h2>
-          <form className={styles.searchForm} onSubmit={handleSearch}>
+          <div className={styles.searchForm}>
             <input
               className={styles.searchInput}
               type="text"
@@ -348,17 +339,16 @@ export default function Admin() {
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
             />
-            <button className={styles.searchBtn} type="submit">Search</button>
-            {search && (
-              <button className={styles.clearBtn} type="button" onClick={handleClearSearch}>
+            {searchInput && (
+              <button className={styles.clearBtn} type="button" onClick={() => setSearchInput("")}>
                 Clear
               </button>
             )}
-          </form>
+          </div>
         </div>
 
-        {users.length === 0 ? (
-          <p className={styles.muted}>No users found.</p>
+        {filteredUsers.length === 0 ? (
+          <p className={styles.muted}>{searchInput ? "No users match that email." : "No users found."}</p>
         ) : (
           <div className={styles.tableWrap}>
             <table className={styles.table}>
@@ -374,7 +364,7 @@ export default function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(u => (
+                {filteredUsers.map(u => (
                   <>
                     <tr
                       key={u.id}

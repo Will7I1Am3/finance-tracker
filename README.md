@@ -85,6 +85,8 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 Database tables are created automatically on first startup for new deployments. If upgrading an existing deployment, see the Supabase migration SQL in `REVIEW-PLAN.md`.
 
+> **Warning:** There is currently only one Supabase database shared between local development and production. Any data you create, modify, or delete locally will affect the live production database. Use caution when testing destructive operations locally. Separate development and production databases will be set up after the assignment is complete.
+
 ### Frontend
 
 ```bash
@@ -113,6 +115,18 @@ cd frontend
 npm run dev
 # Frontend runs at http://localhost:5173
 ```
+
+### Admin Access (Local Only)
+
+To access the app without Google OAuth — including uploading statements and testing the full upload flow — visit:
+
+```
+http://localhost:8000/dev/admin-login
+```
+
+This is a backend route (port 8000, not 5173) — the backend sets the session cookie for a `dev@admin.local` admin user, then automatically redirects you to the frontend. You'll be logged in with full access to all features including uploading and the Admin tab. This route only exists when `ENVIRONMENT=development` and is never registered in production.
+
+> **Note:** The Admin tab is only visible to accounts whose email is listed in the `ADMIN_EMAILS` env var (or `dev@admin.local` in development). Regular users who sign in with Google will not see the Admin tab unless explicitly granted access.
 
 ---
 
@@ -319,7 +333,9 @@ Flat table of all transactions in the selected period, sorted most-recent first.
 Manage the list of credit cards. Add new cards, rename existing ones inline, or delete them. Deletion is blocked if any statements are linked to the card.
 
 **Admin (`/admin`)** — visible only to accounts in `ADMIN_EMAILS`
-Site-wide usage analytics. Shows a KPI strip (total users, total uploads, statements saved, save rate, active users this week), an upload activity area chart, a new signups area chart, and a searchable/scrollable user management table. Clicking a user row expands a drill-down panel with their upload history chart, statement count, and estimated LLM cost. Admin actions: reset a user's daily upload limit, or hard-delete a user and all their data. All charts support 7d / 30d / All time toggles. The page auto-refreshes whenever a new statement is uploaded. All time-based data (chart date buckets, "uploads today", "last active", "signed up", range boundaries) respects the timezone selected in the NavBar Settings dropdown.
+Site-wide usage analytics. Shows a KPI strip (total users, total uploads, statements saved, save rate, active users this week), a 2×2 chart grid (new signups, upload activity, cost per day, cumulative cost), and a searchable/scrollable user management table. Clicking a user row expands a drill-down panel with their upload history chart, statement count, and estimated LLM cost. Admin actions: reset a user's daily upload limit, or hard-delete a user and all their data. All charts support 7d / 30d / All time toggles. The page auto-refreshes whenever a new statement is uploaded. All time-based data (chart date buckets, "uploads today", "last active", "signed up", range boundaries) respects the timezone selected in the NavBar Settings dropdown.
+
+> **Development access:** In a local development environment (`ENVIRONMENT != "production"`), you can bypass Google OAuth and get instant admin access by visiting `http://localhost:8000/dev/admin-login`. Note: this is port 8000 (the backend), not 5173 (the frontend) — the backend must set the session cookie first, then it redirects you to the frontend automatically. This route does not exist in production.
 
 ---
 

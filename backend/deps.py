@@ -7,6 +7,8 @@ from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 from database import get_connection
 
 _ADMIN_EMAILS = {e.strip() for e in os.environ.get("ADMIN_EMAILS", "").split(",") if e.strip()}
+if os.environ.get("ENVIRONMENT", "development") != "production":
+    _ADMIN_EMAILS.add("dev@admin.local")
 
 SESSION_MAX_AGE = 30 * 60  # 30 minutes of inactivity
 
