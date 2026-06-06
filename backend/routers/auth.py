@@ -7,7 +7,7 @@ from itsdangerous import URLSafeTimedSerializer
 from starlette.responses import Response
 
 from database import get_connection
-from deps import SESSION_MAX_AGE, get_current_user, oauth
+from deps import SESSION_MAX_AGE, _ADMIN_EMAILS, get_current_user, oauth
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -67,4 +67,4 @@ def logout(response: Response):
 
 @router.get("/me")
 def me(user: dict = Depends(get_current_user)):
-    return user
+    return {**user, "is_admin": user.get("email") in _ADMIN_EMAILS}

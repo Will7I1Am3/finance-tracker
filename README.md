@@ -71,6 +71,9 @@ DAILY_UPLOAD_LIMIT=10
 
 # Set to "production" on Render (controls SameSite cookie and CORS)
 ENVIRONMENT=development
+
+# Comma-separated list of Google account emails with admin access to /admin
+ADMIN_EMAILS=you@example.com
 ```
 
 `COOKIE_SECRET` can be generated with:
@@ -135,7 +138,8 @@ npm run dev
 │   │   ├── statements.py               # /statements endpoints + rate limiter
 │   │   ├── transactions.py             # /transactions endpoints
 │   │   ├── cards.py                    # /cards endpoints
-│   │   └── redact.py                   # /redact/preview and /redact/apply
+│   │   ├── redact.py                   # /redact/preview and /redact/apply
+│   │   └── admin.py                    # /admin/* endpoints (admin-only, guarded by get_admin_user)
 │   └── tests/
 │       ├── test_endpoints.py           # API endpoint tests
 │       └── extraction_eval/
@@ -157,9 +161,10 @@ npm run dev
 │       │   ├── statements.js
 │       │   ├── transactions.js
 │       │   ├── cards.js
-│       │   └── redact.js               # previewPdf + applyRedactions fetch helpers
+│       │   ├── redact.js               # previewPdf + applyRedactions fetch helpers
+│       │   └── admin.js                # All /admin/* fetch calls
 │       ├── components/
-│       │   ├── NavBar.jsx              # Top nav (4 links) with theme toggle, user email, Sign out
+│       │   ├── NavBar.jsx              # Top nav with theme toggle, user email, Sign out; shows Admin link for admin users
 │       │   ├── UploadModal.jsx         # Full-screen modal wrapper; sticky header + close guard
 │       │   ├── StatementCard.jsx       # Single accordion row (collapsed header + edit form)
 │       │   └── StatementDetail.jsx     # Expanded transaction table (edit/add/delete rows)
@@ -169,7 +174,8 @@ npm run dev
 │       │   ├── Upload.jsx              # PDF upload + annotation + review (rendered inside UploadModal)
 │       │   ├── Statements.jsx          # Statement list — page-level state and data fetching
 │       │   ├── Transactions.jsx        # Full transaction table with period filter
-│       │   └── Cards.jsx               # Card management
+│       │   ├── Cards.jsx               # Card management
+│       │   └── Admin.jsx               # Admin analytics dashboard (guarded — only visible to admin accounts)
 │       └── utils/
 │           └── period.js               # Shared period filter helpers
 ├── live_documents/                     # Personal PDFs used during development (not committed)
@@ -311,6 +317,9 @@ Flat table of all transactions in the selected period, sorted most-recent first.
 **Cards (`/cards`)**
 Manage the list of credit cards. Add new cards, rename existing ones inline, or delete them. Deletion is blocked if any statements are linked to the card.
 
+**Admin (`/admin`)** — visible only to accounts in `ADMIN_EMAILS`
+Site-wide usage analytics. Shows a KPI strip (total users, total uploads, statements saved, save rate, active users this week), an upload activity area chart, a new signups area chart, and a searchable/scrollable user management table. Clicking a user row expands a drill-down panel with their upload history chart, statement count, and estimated LLM cost. Admin actions: reset a user's daily upload limit, or hard-delete a user and all their data. All charts support 7d / 30d / All time toggles. The page auto-refreshes whenever a new statement is uploaded.
+
 ---
 
 ## Database Schema
@@ -319,9 +328,10 @@ PostgreSQL via Supabase. Tables are created automatically on first server start 
 
 ```sql
 CREATE TABLE users (
-    id        SERIAL PRIMARY KEY,
-    google_id TEXT NOT NULL UNIQUE,
-    email     TEXT NOT NULL
+    id         SERIAL PRIMARY KEY,
+    google_id  TEXT NOT NULL UNIQUE,
+    email      TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()    -- signup timestamp; used for admin signup chart
 );
 
 CREATE TABLE cards (
@@ -361,9 +371,11 @@ CREATE TABLE category_corrections (
 );
 
 CREATE TABLE usage (
-    user_id      INTEGER NOT NULL REFERENCES users(id),
-    date         DATE NOT NULL,
-    upload_count INTEGER NOT NULL DEFAULT 0,
+    user_id       INTEGER NOT NULL REFERENCES users(id),
+    date          DATE NOT NULL,
+    upload_count  INTEGER NOT NULL DEFAULT 0,
+    input_tokens  INTEGER NOT NULL DEFAULT 0,   -- Claude input tokens for cost tracking
+    output_tokens INTEGER NOT NULL DEFAULT 0,   -- Claude output tokens for cost tracking
     PRIMARY KEY (user_id, date)
 );
 ```
@@ -377,7 +389,7 @@ CREATE TABLE usage (
 | `GET` | `/auth/login` | Redirect to Google OAuth (with `prompt=select_account`) |
 | `GET` | `/auth/callback` | Google redirects here after auth; sets signed httpOnly session cookie; redirects to frontend |
 | `POST` | `/auth/logout` | Clears the session cookie |
-| `GET` | `/auth/me` | Returns `{ user_id, email }` for the current session, or 401 if not authenticated |
+| `GET` | `/auth/me` | Returns `{ user_id, email, is_admin }` for the current session, or 401 if not authenticated |
 | `GET` | `/statements/usage` | Returns `{ used, limit }` — today's LLM extraction count vs. the daily cap for the current user |
 | `GET` | `/statements` | List all statements, newest period first. Filter: `?card_name=` |
 | `GET` | `/statements/{id}` | Single statement + its transactions + `transaction_sum` |
@@ -395,6 +407,13 @@ CREATE TABLE usage (
 | `POST` | `/cards` | Add a new card. Duplicate names rejected (409) |
 | `PATCH` | `/cards/{id}` | Rename a card |
 | `DELETE` | `/cards/{id}` | Delete a card. Rejected (409) if statements or transactions still reference it |
+| `GET` | `/admin/stats` | KPI strip: total users, statements, uploads, active this week, save rate. Admin only. |
+| `GET` | `/admin/users?search=` | Per-user table with optional email search. Admin only. |
+| `GET` | `/admin/activity?range=7d\|30d\|all` | Site-wide uploads per day for activity chart. Admin only. |
+| `GET` | `/admin/signups?range=7d\|30d\|all` | New user registrations per day. Admin only. |
+| `GET` | `/admin/users/{id}/activity?range=` | Per-user upload history for drill-down chart. Admin only. |
+| `POST` | `/admin/users/{id}/reset-usage` | Zero out a user's upload count for today. Admin only. |
+| `DELETE` | `/admin/users/{id}` | Hard delete a user and all their data (cascades through all tables). Admin only. |
 
 `PATCH /transactions/{id}` always returns the current `transaction_sum` alongside the updated transaction so the frontend can surface a mismatch warning if the sum no longer equals `statement_balance`. The API does not block mismatched saves — it only flags them.
 

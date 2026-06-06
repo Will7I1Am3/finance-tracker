@@ -1,10 +1,12 @@
 import os
 
 from authlib.integrations.starlette_client import OAuth
-from fastapi import HTTPException, Request, Response
+from fastapi import Depends, HTTPException, Request, Response
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
 from database import get_connection
+
+_ADMIN_EMAILS = {e.strip() for e in os.environ.get("ADMIN_EMAILS", "").split(",") if e.strip()}
 
 SESSION_MAX_AGE = 30 * 60  # 30 minutes of inactivity
 
@@ -45,3 +47,9 @@ def get_current_user(request: Request, response: Response) -> dict:
         return data
     except (BadSignature, SignatureExpired):
         raise HTTPException(status_code=401, detail="Not authenticated")
+
+
+def get_admin_user(user: dict = Depends(get_current_user)) -> dict:
+    if user.get("email") not in _ADMIN_EMAILS:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user

@@ -1,4 +1,5 @@
 import os
+from datetime import date
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
 
@@ -39,8 +40,8 @@ def list_statements(
 def get_usage(user: dict = Depends(get_current_user)) -> dict:
     conn = get_connection()
     row = conn.execute(
-        "SELECT upload_count FROM usage WHERE user_id = %s AND date = CURRENT_DATE",
-        (user["user_id"],),
+        "SELECT upload_count FROM usage WHERE user_id = %s AND date = %s",
+        (user["user_id"], date.today()),
     ).fetchone()
     conn.close()
     return {"used": row["upload_count"] if row else 0, "limit": _DAILY_LIMIT}
@@ -90,9 +91,10 @@ async def upload_statement(
     conn = get_connection()
 
     # Rate limit check + increment (atomic within same connection)
+    today = date.today()
     usage_row = conn.execute(
-        "SELECT upload_count FROM usage WHERE user_id = %s AND date = CURRENT_DATE",
-        (user["user_id"],),
+        "SELECT upload_count FROM usage WHERE user_id = %s AND date = %s",
+        (user["user_id"], today),
     ).fetchone()
     current_count = usage_row["upload_count"] if usage_row else 0
     if current_count >= _DAILY_LIMIT:
@@ -115,7 +117,7 @@ async def upload_statement(
     conn.close()
 
     try:
-        result = extract_from_pdf(pdf_bytes, existing_cards, corrections)
+        result, tokens = extract_from_pdf(pdf_bytes, existing_cards, corrections)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
@@ -133,9 +135,13 @@ async def upload_statement(
         raise HTTPException(status_code=409, detail="This statement has already been uploaded.")
 
     conn.execute(
-        "INSERT INTO usage (user_id, date, upload_count) VALUES (%s, CURRENT_DATE, 1)"
-        " ON CONFLICT (user_id, date) DO UPDATE SET upload_count = usage.upload_count + 1",
-        (user["user_id"],),
+        "INSERT INTO usage (user_id, date, upload_count, input_tokens, output_tokens)"
+        " VALUES (%s, %s, 1, %s, %s)"
+        " ON CONFLICT (user_id, date) DO UPDATE SET"
+        " upload_count = usage.upload_count + 1,"
+        " input_tokens = usage.input_tokens + EXCLUDED.input_tokens,"
+        " output_tokens = usage.output_tokens + EXCLUDED.output_tokens",
+        (user["user_id"], today, tokens["input_tokens"], tokens["output_tokens"]),
     )
     conn.commit()
     conn.close()

@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Statements from "./pages/Statements";
 import Transactions from "./pages/Transactions";
 import Cards from "./pages/Cards";
+import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import styles from "./App.module.css";
 
@@ -28,6 +29,7 @@ function AppRoutes() {
           <Route path="/statements" element={<Statements />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/cards" element={<Cards />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
       <button className={styles.fab} onClick={() => setUploadOpen(true)}>

@@ -11,7 +11,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from database import init_db
 from deps import oauth  # noqa: F401 — registers OAuth client at import time
-from routers import auth, cards, redact, statements, transactions
+from routers import admin, auth, cards, redact, statements, transactions
 
 
 @asynccontextmanager
@@ -36,3 +36,4 @@ app.include_router(statements.router)
 app.include_router(transactions.router)
 app.include_router(cards.router)
 app.include_router(redact.router)
+app.include_router(admin.router)

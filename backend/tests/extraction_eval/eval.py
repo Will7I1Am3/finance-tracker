@@ -131,7 +131,7 @@ def run_case(entry: dict, base: Path) -> dict:
     print(f"Card  : {card_name}  |  Expected: {'GOOD' if expected_valid else 'BAD'}")
 
     try:
-        result = extract_from_pdf(pdf_path.read_bytes(), existing_cards=[card_name])
+        result, _ = extract_from_pdf(pdf_path.read_bytes(), existing_cards=[card_name])
         actual_valid = True
         rejection_reason = None
     except ValueError as e:
@@ -378,7 +378,7 @@ def main() -> None:
     print(f"Extracting from {pdf_path.name} (card: {card_name}) ...")
 
     try:
-        result = extract_from_pdf(pdf_path.read_bytes(), existing_cards=[card_name])
+        result, _ = extract_from_pdf(pdf_path.read_bytes(), existing_cards=[card_name])
     except ValueError as e:
         print(f"\nRejected — reason: {e}")
         return

@@ -1,0 +1,360 @@
+.page {
+  max-width: 960px;
+}
+
+.heading {
+  margin-bottom: 1.5rem;
+}
+
+/* ── KPI strip ── */
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 860px) {
+  .kpiRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.kpi {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.kpiLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+
+.kpiValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1;
+}
+
+/* ── Sections ── */
+
+.section {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ── Range toggle ── */
+
+.rangeToggle {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.rangeBtn {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.rangeBtn:hover {
+  color: var(--text);
+}
+
+.rangeBtnActive {
+  background: var(--surface-2);
+  color: var(--text-strong);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Search ── */
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  width: 220px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.searchBtn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.searchBtn:hover {
+  opacity: 0.88;
+}
+
+.clearBtn {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.clearBtn:hover {
+  color: var(--text);
+}
+
+/* ── User table ── */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.userRow {
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.userRow:hover {
+  background: var(--surface);
+}
+
+.userRowExpanded {
+  background: var(--surface);
+}
+
+.emailTd {
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.mutedTd {
+  color: var(--text-muted);
+}
+
+.detailRow td {
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detailCell {
+  padding: 0 !important;
+}
+
+/* ── Drill-down panel ── */
+
+.drillDown {
+  background: var(--surface);
+  border-top: 2px solid var(--accent);
+  padding: 1.25rem 1.5rem;
+}
+
+.drillHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.drillEmail {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}
+
+.closeBtn:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.drillStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.drillStat {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  min-width: 110px;
+}
+
+.drillStatLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.drillStatValue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.drillChartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.drillChartTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.drillActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.resetBtn {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.resetBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.resetBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deleteBtn {
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Misc ── */
+
+.muted {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.errorMsg {
+  color: #ef4444;
+  font-size: 0.875rem;
+}

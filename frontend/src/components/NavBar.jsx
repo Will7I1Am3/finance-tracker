@@ -54,6 +54,16 @@ export default function NavBar() {
             {label}
           </NavLink>
         ))}
+        {user?.is_admin && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) =>
+              isActive ? `${styles.link} ${styles.active}` : styles.link
+            }
+          >
+            Admin
+          </NavLink>
+        )}
       </div>
       <div className={styles.right}>
         {user && <span className={styles.email}>{user.email}</span>}

@@ -1,7 +1,5 @@
 # Review Plan
 
-Feedback received from review day (June 2) and staff feedback (June 3), along with planned fixes and features in response.
-
 ## Feedback & Response
 
 - **Same PDF blocked across users**
