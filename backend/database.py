@@ -6,9 +6,10 @@ import psycopg2.extras
 SCHEMA_STATEMENTS = [
     """
     CREATE TABLE IF NOT EXISTS users (
-        id        SERIAL PRIMARY KEY,
-        google_id TEXT NOT NULL UNIQUE,
-        email     TEXT NOT NULL
+        id         SERIAL PRIMARY KEY,
+        google_id  TEXT NOT NULL UNIQUE,
+        email      TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
     )
     """,
     """
@@ -53,9 +54,11 @@ SCHEMA_STATEMENTS = [
     """,
     """
     CREATE TABLE IF NOT EXISTS usage (
-        user_id      INTEGER NOT NULL REFERENCES users(id),
-        date         DATE NOT NULL,
-        upload_count INTEGER NOT NULL DEFAULT 0,
+        user_id       INTEGER NOT NULL REFERENCES users(id),
+        date          DATE NOT NULL,
+        upload_count  INTEGER NOT NULL DEFAULT 0,
+        input_tokens  INTEGER NOT NULL DEFAULT 0,
+        output_tokens INTEGER NOT NULL DEFAULT 0,
         PRIMARY KEY (user_id, date)
     )
     """,

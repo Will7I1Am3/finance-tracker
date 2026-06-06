@@ -1,11 +1,21 @@
 import { get, post, del } from "./client";
 
-export const getAdminStats = () => get("/admin/stats");
-export const getAdminUsers = (search = "") =>
-  get(`/admin/users${search ? `?search=${encodeURIComponent(search)}` : ""}`);
-export const getSiteActivity = (range = "7d") => get(`/admin/activity?range=${range}`);
-export const getUserSignups = (range = "7d") => get(`/admin/signups?range=${range}`);
-export const getUserActivity = (userId, range = "7d") =>
-  get(`/admin/users/${userId}/activity?range=${range}`);
+const tzParam = (tz) => `tz=${encodeURIComponent(tz)}`;
+
+export const getAdminStats = (tz = "UTC") =>
+  get(`/admin/stats?${tzParam(tz)}`);
+
+export const getAdminUsers = (search = "", tz = "UTC") =>
+  get(`/admin/users?${search ? `search=${encodeURIComponent(search)}&` : ""}${tzParam(tz)}`);
+
+export const getSiteActivity = (range = "7d", tz = "UTC") =>
+  get(`/admin/activity?range=${range}&${tzParam(tz)}`);
+
+export const getUserSignups = (range = "7d", tz = "UTC") =>
+  get(`/admin/signups?range=${range}&${tzParam(tz)}`);
+
+export const getUserActivity = (userId, range = "7d", tz = "UTC") =>
+  get(`/admin/users/${userId}/activity?range=${range}&${tzParam(tz)}`);
+
 export const resetUserUsage = (userId) => post(`/admin/users/${userId}/reset-usage`, {});
 export const deleteUser = (userId) => del(`/admin/users/${userId}`);

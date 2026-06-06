@@ -154,6 +154,7 @@ npm run dev
 │       ├── App.jsx                     # Root component, router, auth gate, FAB + UploadModal
 │       ├── AuthContext.jsx             # AuthProvider + useAuth() hook; calls /auth/me on load
 │       ├── ThemeContext.jsx            # Light/dark theme state + localStorage
+│       ├── SettingsContext.jsx         # Timezone preference + city list; persisted in localStorage
 │       ├── DataRefreshContext.jsx      # Refresh counter; pages re-fetch when triggerRefresh() fires
 │       ├── index.css                   # Global styles and CSS variables
 │       ├── api/
@@ -164,7 +165,7 @@ npm run dev
 │       │   ├── redact.js               # previewPdf + applyRedactions fetch helpers
 │       │   └── admin.js                # All /admin/* fetch calls
 │       ├── components/
-│       │   ├── NavBar.jsx              # Top nav with theme toggle, user email, Sign out; shows Admin link for admin users
+│       │   ├── NavBar.jsx              # Top nav; theme toggle + Settings gear (timezone selector + Sign out dropdown); Admin link for admin users
 │       │   ├── UploadModal.jsx         # Full-screen modal wrapper; sticky header + close guard
 │       │   ├── StatementCard.jsx       # Single accordion row (collapsed header + edit form)
 │       │   └── StatementDetail.jsx     # Expanded transaction table (edit/add/delete rows)
@@ -175,7 +176,7 @@ npm run dev
 │       │   ├── Statements.jsx          # Statement list — page-level state and data fetching
 │       │   ├── Transactions.jsx        # Full transaction table with period filter
 │       │   ├── Cards.jsx               # Card management
-│       │   └── Admin.jsx               # Admin analytics dashboard (guarded — only visible to admin accounts)
+│       │   └── Admin.jsx               # Admin analytics dashboard (guarded — only visible to admin accounts); all time data timezone-aware
 │       └── utils/
 │           └── period.js               # Shared period filter helpers
 ├── live_documents/                     # Personal PDFs used during development (not committed)
@@ -318,7 +319,7 @@ Flat table of all transactions in the selected period, sorted most-recent first.
 Manage the list of credit cards. Add new cards, rename existing ones inline, or delete them. Deletion is blocked if any statements are linked to the card.
 
 **Admin (`/admin`)** — visible only to accounts in `ADMIN_EMAILS`
-Site-wide usage analytics. Shows a KPI strip (total users, total uploads, statements saved, save rate, active users this week), an upload activity area chart, a new signups area chart, and a searchable/scrollable user management table. Clicking a user row expands a drill-down panel with their upload history chart, statement count, and estimated LLM cost. Admin actions: reset a user's daily upload limit, or hard-delete a user and all their data. All charts support 7d / 30d / All time toggles. The page auto-refreshes whenever a new statement is uploaded.
+Site-wide usage analytics. Shows a KPI strip (total users, total uploads, statements saved, save rate, active users this week), an upload activity area chart, a new signups area chart, and a searchable/scrollable user management table. Clicking a user row expands a drill-down panel with their upload history chart, statement count, and estimated LLM cost. Admin actions: reset a user's daily upload limit, or hard-delete a user and all their data. All charts support 7d / 30d / All time toggles. The page auto-refreshes whenever a new statement is uploaded. All time-based data (chart date buckets, "uploads today", "last active", "signed up", range boundaries) respects the timezone selected in the NavBar Settings dropdown.
 
 ---
 
@@ -407,11 +408,11 @@ CREATE TABLE usage (
 | `POST` | `/cards` | Add a new card. Duplicate names rejected (409) |
 | `PATCH` | `/cards/{id}` | Rename a card |
 | `DELETE` | `/cards/{id}` | Delete a card. Rejected (409) if statements or transactions still reference it |
-| `GET` | `/admin/stats` | KPI strip: total users, statements, uploads, active this week, save rate. Admin only. |
-| `GET` | `/admin/users?search=` | Per-user table with optional email search. Admin only. |
-| `GET` | `/admin/activity?range=7d\|30d\|all` | Site-wide uploads per day for activity chart. Admin only. |
-| `GET` | `/admin/signups?range=7d\|30d\|all` | New user registrations per day. Admin only. |
-| `GET` | `/admin/users/{id}/activity?range=` | Per-user upload history for drill-down chart. Admin only. |
+| `GET` | `/admin/stats?tz=` | KPI strip: total users, statements, uploads, active this week, save rate. `tz` = IANA timezone (default UTC). Admin only. |
+| `GET` | `/admin/users?search=&tz=` | Per-user table with optional email search. Dates bucketed in `tz`. Admin only. |
+| `GET` | `/admin/activity?range=7d\|30d\|all&tz=` | Site-wide uploads per day bucketed in `tz`. Admin only. |
+| `GET` | `/admin/signups?range=7d\|30d\|all&tz=` | New user registrations per day bucketed in `tz`. Admin only. |
+| `GET` | `/admin/users/{id}/activity?range=&tz=` | Per-user upload history bucketed in `tz`. Admin only. |
 | `POST` | `/admin/users/{id}/reset-usage` | Zero out a user's upload count for today. Admin only. |
 | `DELETE` | `/admin/users/{id}` | Hard delete a user and all their data (cascades through all tables). Admin only. |
 

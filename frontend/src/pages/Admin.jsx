@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { useTheme } from "../ThemeContext";
+import { useSettings } from "../SettingsContext";
 import { useDataRefresh } from "../DataRefreshContext";
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -76,7 +77,15 @@ function ActivityChart({ data, dataKey, color, c }) {
   );
 }
 
-function UserDrillDown({ user, c, onClose, onResetDone, onDeleteDone }) {
+function fmtTs(ts, tz) {
+  if (!ts) return null;
+  return new Date(ts + "Z").toLocaleDateString("en-US", {
+    timeZone: tz,
+    year: "numeric", month: "short", day: "numeric",
+  });
+}
+
+function UserDrillDown({ user, c, tz, refreshKey, onClose, onResetDone, onDeleteDone }) {
   const [range, setRange] = useState("7d");
   const [activity, setActivity] = useState([]);
   const [loadingAct, setLoadingAct] = useState(true);
@@ -86,11 +95,11 @@ function UserDrillDown({ user, c, onClose, onResetDone, onDeleteDone }) {
 
   useEffect(() => {
     setLoadingAct(true);
-    getUserActivity(user.id, range)
+    getUserActivity(user.id, range, tz)
       .then(setActivity)
       .catch(() => setActivity([]))
       .finally(() => setLoadingAct(false));
-  }, [user.id, range]);
+  }, [user.id, range, tz, refreshKey]);
 
   const handleReset = async () => {
     setResetting(true);
@@ -149,7 +158,7 @@ function UserDrillDown({ user, c, onClose, onResetDone, onDeleteDone }) {
         <div className={styles.drillStat}>
           <div className={styles.drillStatLabel}>Signed up</div>
           <div className={styles.drillStatValue}>
-            {user.created_at ? new Date(user.created_at).toLocaleDateString() : "Before tracking"}
+            {user.created_at ? fmtTs(user.created_at, tz) : "Before tracking"}
           </div>
         </div>
       </div>
@@ -190,6 +199,7 @@ export default function Admin() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { resolvedTimezone } = useSettings();
   const { refreshKey } = useDataRefresh();
   const c = CHART[theme] || CHART.dark;
 
@@ -210,30 +220,30 @@ export default function Admin() {
   }, [user, navigate]);
 
   useEffect(() => {
-    Promise.all([getAdminStats(), getAdminUsers(search)])
+    Promise.all([getAdminStats(resolvedTimezone), getAdminUsers(search, resolvedTimezone)])
       .then(([s, u]) => { setStats(s); setUsers(u); })
       .catch(() => setError("Failed to load admin data."))
       .finally(() => setLoading(false));
-  }, [refreshKey]);
+  }, [refreshKey, resolvedTimezone]);
 
   useEffect(() => {
-    getSiteActivity(actRange).then(setActivity).catch(() => setActivity([]));
-  }, [actRange]);
+    getSiteActivity(actRange, resolvedTimezone).then(setActivity).catch(() => setActivity([]));
+  }, [actRange, resolvedTimezone, refreshKey]);
 
   useEffect(() => {
-    getUserSignups(sigRange).then(setSignups).catch(() => setSignups([]));
-  }, [sigRange]);
+    getUserSignups(sigRange, resolvedTimezone).then(setSignups).catch(() => setSignups([]));
+  }, [sigRange, resolvedTimezone, refreshKey]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setSearch(searchInput.trim());
-    getAdminUsers(searchInput.trim()).then(setUsers).catch(() => {});
+    getAdminUsers(searchInput.trim(), resolvedTimezone).then(setUsers).catch(() => {});
   };
 
   const handleClearSearch = () => {
     setSearchInput("");
     setSearch("");
-    getAdminUsers("").then(setUsers).catch(() => {});
+    getAdminUsers("", resolvedTimezone).then(setUsers).catch(() => {});
   };
 
   const handleResetDone = useCallback((userId) => {
@@ -341,7 +351,7 @@ export default function Admin() {
                       <td>${u.estimated_cost.toFixed(4)}</td>
                       <td className={styles.mutedTd}>{u.last_active ?? "—"}</td>
                       <td className={styles.mutedTd}>
-                        {u.created_at ? new Date(u.created_at).toLocaleDateString() : "—"}
+                        {u.created_at ? fmtTs(u.created_at, resolvedTimezone) : "—"}
                       </td>
                     </tr>
                     {expandedId === u.id && (
@@ -350,6 +360,8 @@ export default function Admin() {
                           <UserDrillDown
                             user={u}
                             c={c}
+                            tz={resolvedTimezone}
+                            refreshKey={refreshKey}
                             onClose={() => setExpandedId(null)}
                             onResetDone={handleResetDone}
                             onDeleteDone={handleDeleteDone}

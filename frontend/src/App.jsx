@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./ThemeContext";
+import { SettingsProvider } from "./SettingsContext";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { DataRefreshProvider } from "./DataRefreshContext";
 import NavBar from "./components/NavBar";
@@ -45,11 +46,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <DataRefreshProvider>
-          <AppRoutes />
-        </DataRefreshProvider>
-      </AuthProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <DataRefreshProvider>
+            <AppRoutes />
+          </DataRefreshProvider>
+        </AuthProvider>
+      </SettingsProvider>
     </ThemeProvider>
   );
 }

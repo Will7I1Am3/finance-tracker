@@ -77,14 +77,19 @@ Rules:
 - For statement_balance: extract the total amount due for this billing cycle (look for "New Balance", "Statement Balance", "Total Amount Due", "Amount Due", or on Apple Card "Your [Month] Balance"). Use empty string "" if not found.
 - DO NOT extract or include: account numbers, card numbers, SSNs, full name on account, routing numbers, credit limit
 - Your extraction goal is to find the line items that sum to the statement balance. The balance is your ground truth — use it to validate everything.
+- ABSOLUTE RULE — NEGATIVE AMOUNTS: Any line item whose dollar amount is negative (shown with a − sign or in parentheses) is NEVER a transaction. It is a payment, refund, or credit. Exclude it unconditionally from your output, even if it appears under a heading that sounds like purchases.
 
 STEP 1 — Record the statement balance first. This is your target sum.
 
 STEP 2 — Map every section in the document before extracting anything. Each section has a header or label. Classify every section as one of:
   CHARGES — things the cardholder owes: purchases, transactions, installment plans
   SKIP    — things that do not contribute to what is owed: payments, credits, refunds, returns, adjustments, reward redemptions, cash back redemptions, points redeemed
-
-  Classify as SKIP any section whose header contains words like: Payment, Credit, Refund, Return, Adjustment, Redemption, Rewards, Cash Back, Points. When in doubt, classify as SKIP.
+  Classify as SKIP any section whose header contains ANY of these words: Payment, Credit, Refund, Return, Adjustment, Redemption, Rewards, Cash Back, Points.
+  When in doubt, classify as SKIP.
+  IMPORTANT: A section header that contains BOTH a purchases-like word AND a skip word is always SKIP. Examples:
+    "PAYMENTS AND OTHER CREDITS" → SKIP (contains Payment and Credit)
+    "PURCHASES AND REDEMPTIONS" → SKIP (contains Redemption — the redemption keyword overrides)
+    "PURCHASE" or "PURCHASES" alone → CHARGES
 
 STEP 3 — Work through CHARGES sections only, starting with the largest one (usually "Purchases" or "Transactions"):
   a. Sum only the positive line items in it. Skip any line item that meets any of these conditions — those are not charges:
@@ -95,6 +100,12 @@ STEP 3 — Work through CHARGES sections only, starting with the largest one (us
   d. If the sum is still less after exhausting all CHARGES sections → return what you have. Do not pull from SKIP sections to close the gap.
 
 STEP 4 — Never use a SKIP section to reach the balance, even if the math works out. Payments, refunds, and redemptions belong to SKIP regardless of their amounts.
+
+STEP 5 — Before producing output, do a final check on every transaction you are about to return:
+  - Remove any entry whose amount is negative or zero.
+  - Remove any entry that came from a SKIP section.
+  - Remove any entry that has a reward/points column alongside its amount (it is a redemption entry).
+  If removing those entries causes your sum to still match the balance, you are done. If the balance no longer matches, do not add back SKIP entries — just return what you have.
 
 - amounts are always positive decimal strings (no dollar signs, no negative numbers)
 - location is the 2-letter state abbreviation only (e.g. "CA", "NY") — drop the city; use empty string "" if no state is present
