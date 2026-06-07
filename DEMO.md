@@ -12,8 +12,9 @@
 ---
 ## Demo Link
 
-[Demo Youtube](https://youtu.be/OS6PvKGjmAk)
+[Initial Submission Demo Youtube](https://youtu.be/OS6PvKGjmAk)
 
+[Final Submission Demo Youtube](https://youtu.be/7ru3kba6HGY)
 ---
 
 ## Using the Live App
@@ -28,16 +29,17 @@
 **NOTE**: I have provided some sample personal statements in the google drive folder linked [here](https://drive.google.com/drive/folders/19Jhdq2oeSGdaQ6eMj7sZAuF1a3PkrEqm?usp=sharing). Feel free to use those or upload your own. (The app does not store any PDFs or extracted data persistently, but you can verify that the redaction step works by uploading a statement with sensitive info and checking the redacted version before confirming the upload.) The samples consist of both good (Credit Card Statements) and bad examples (Non-credit card statements) for testing the robustness of the extraction and redaction features.
 - Click the **`+ Upload`** button (bottom-right corner)
 - Select a credit card PDF statement (Apple Card, Chase, or Citi work best)
-- **Step 2 — Optional redaction:** drag to draw black boxes over any sensitive content (account number, name, address). Click a box to remove it. Skip this step if you prefer.
+- **Step 2 — Optional redaction:** drag to draw black boxes over any sensitive content (account number, name, address). Click a box to remove it. Skip this step if you prefer. No AI is involved in this step — redaction is handled by a PDF library on the server, and anything blacked out is never seen by Claude.
 - Click **"Extract transactions →"** — Claude Haiku processes the PDF (takes ~5–10 seconds)
 - **Step 3 — Review:** edit any field inline (date, description, category, amount). Add or remove rows as needed. Check that the transaction sum matches the statement balance.
 - Click **"Confirm & Save"** — the dashboard and statements list update automatically
 
 ### 3. Explore
-- **Dashboard (`/`)** — total spend, transaction count, and charts by category and card. Use the period selector to navigate months.
-- **Statements (`/statements`)** — accordion list of all saved statements. Expand one to edit transactions inline.
-- **Transactions (`/transactions`)** — flat table of all transactions with a period filter.
+- **Dashboard (`/`)** — total spend, transaction count, and charts by category and card. Use the **Month / 3 Mo / Year / Custom** period selector to filter by any date range.
+- **Statements (`/statements`)** — accordion list of all saved statements, filterable by card and date range. Expand one to edit transactions inline.
+- **Transactions (`/transactions`)** — flat table of all transactions with the same period selector. Switch to **Custom** to enter an arbitrary start and end date.
 - **Cards (`/cards`)** — manage your list of cards (add, rename, delete).
+- **Admin (`/admin`)** — visible only to accounts in the `ADMIN_EMAILS` list. Shows site-wide KPIs, upload activity, signups, and LLM cost charts, plus a user management table with per-user drill-down. To access locally without Google OAuth, visit `http://localhost:8000/dev/admin-login` (backend port, not frontend) — this logs you in as `dev@admin.local` with full admin access.
 
 ### 4. Sign out
 - Click your email in the top-right navbar → **"Sign out"**
@@ -47,7 +49,9 @@
 
 ## Rate Limit
 
-Each user is limited to **10 PDF extractions per day**. The current count is shown in the upload modal header. The counter resets at midnight UTC.
+Each user is limited to **10 PDF extractions per day**. The current count is shown in the upload modal header and turns amber at 2 remaining and red at 0. The counter resets at midnight UTC.
+
+The same daily quota also gates the redaction canvas — if your limit is exhausted, you cannot load a PDF into the redaction step at all. This prevents the upload flow from being bypassed through the redaction endpoints.
 
 ---
 

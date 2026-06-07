@@ -6,6 +6,16 @@ A public-facing credit card statement tracker deployed on Render (backend) and V
 
 **Backend API:** https://finance-tracker-f0ld.onrender.com/docs
 
+> **Note:** The backend runs on Render's free tier and may take up to 30 seconds to wake up after a period of inactivity. If the app hangs on first load, wait a moment and refresh.
+
+---
+
+## Demo Link
+
+[Initial Submission Demo Youtube](https://youtu.be/OS6PvKGjmAk)
+
+[Final Submission Demo Youtube](https://youtu.be/7ru3kba6HGY)
+
 ---
 
 ## What It Does
