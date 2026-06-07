@@ -181,6 +181,8 @@ This is a backend route (port 8000, not 5173) — the backend sets the session c
 │       ├── components/
 │       │   ├── NavBar.jsx              # Top nav; theme toggle + Settings gear (timezone selector + Sign out dropdown); Admin link for admin users
 │       │   ├── UploadModal.jsx         # Full-screen modal wrapper; sticky header + close guard
+│       │   ├── PeriodSelector.jsx      # Shared period filter (Month/3Mo/Year/Custom) used by Dashboard, Transactions, Statements
+│       │   ├── PeriodSelector.module.css
 │       │   ├── StatementCard.jsx       # Single accordion row (collapsed header + edit form)
 │       │   └── StatementDetail.jsx     # Expanded transaction table (edit/add/delete rows)
 │       ├── pages/
@@ -318,16 +320,16 @@ The nav has four pages: Dashboard, Statements, Transactions, Cards. Upload is a 
 Shown when the user is not authenticated. A single "Sign in with Google" button redirects to `/auth/login`. After OAuth completes, the user is redirected back to the app and the full UI renders. The NavBar shows the user's email and a Sign out button while logged in.
 
 **Dashboard (`/`)**
-Spending overview for a selected time period. Defaults to the current month. Use the `Month / 3 Mo / Year` toggle and the `‹ ›` arrows to navigate. Shows total spend and transaction count for the period, then two chart sections — By Card and By Category — each with a bar/pie toggle and a spend/transaction-count toggle. Clicking a card tile expands an inline transaction table for that card.
+Spending overview for a selected time period. Defaults to the current month. Use the `Month / 3 Mo / Year / Custom` toggle and the `‹ ›` arrows to navigate. In Custom mode the arrows are replaced with start and end date pickers, pre-populated from the current period. Shows total spend and transaction count for the period, then two chart sections — By Card and By Category — each with a bar/pie toggle and a spend/transaction-count toggle. Clicking a card tile expands an inline transaction table for that card.
 
 **Upload (FAB modal)**
 A `+ Upload` floating action button sits fixed at the bottom-right of every page. Clicking it opens a full-screen modal overlay (same background as the app, scrollable) with a sticky header bar showing the current step and a close button. The header updates as you move through the three phases: *Step 1 of 3 — Select PDF* → *Step 2 of 3 — Optional redaction* → *Step 3 of 3 — Edit & confirm*. Closing mid-flow shows a confirmation prompt. Phase 1: pick a PDF. Phase 2: the PDF is rendered page-by-page — drag to draw black redaction boxes over any sensitive content (account numbers, name, address), click a box to remove it. Redaction is optional. Phase 3: review the LLM-extracted transactions in an editable table before confirming. The card name is auto-detected, the statement balance is editable, and rows can be added, modified, or removed. A mismatch warning appears if transaction amounts do not sum to the stated balance. A "Download redacted PDF" button is available when boxes have been drawn. On save, Dashboard, Statements, and Transactions pages re-fetch automatically — no manual refresh needed.
 
 **Statements (`/statements`)**
-Accordion list of all saved statements, sorted by billing period (most recent first). A card filter dropdown scopes the list. Expanding a statement shows its full transaction table with inline row editing (description, category, location, amount), per-row delete, and an add-transaction form. The statement header (card, period dates, balance) is also editable inline.
+Accordion list of all saved statements, sorted by billing period (most recent first). A card filter dropdown and the `Month / 3 Mo / Year / Custom` period selector (filtering on `period_start`) scope the list. Expanding a statement shows its full transaction table with inline row editing (description, category, location, amount), per-row delete, and an add-transaction form. The statement header (card, period dates, balance) is also editable inline.
 
 **Transactions (`/transactions`)**
-Flat table of all transactions in the selected period, sorted most-recent first. Same `Month / 3 Mo / Year` period selector as the Dashboard. Columns: Date, Card, Description, Category, Location, Amount. Shows a transaction count and total spend summary.
+Flat table of all transactions in the selected period, sorted most-recent first. Same `Month / 3 Mo / Year / Custom` period selector as the Dashboard. Columns: Date, Card, Description, Category, Location, Amount. Shows a transaction count and total spend summary.
 
 **Cards (`/cards`)**
 Manage the list of credit cards. Add new cards, rename existing ones inline, or delete them. Deletion is blocked if any statements are linked to the card.
@@ -412,8 +414,8 @@ CREATE TABLE usage (
 | `GET` | `/statements/{id}` | Single statement + its transactions + `transaction_sum` |
 | `POST` | `/statements/upload` | PDF → LLM extraction (preview only, does not save). Accepts optional `original_hash` form field for redacted uploads. Rate limited per user per day. |
 | `POST` | `/statements` | Save confirmed statement + transactions to DB. Rejected (409) if same card + period already exists. |
-| `POST` | `/redact/preview` | Render each page of an uploaded PDF as a base64 PNG. Returns `{pages: [{image, width, height}]}`. |
-| `POST` | `/redact/apply` | Apply redaction rectangles to a PDF and return the redacted file. Accepts `file` + `rectangles` (JSON array of `{page, x, y, w, h}` in PDF points). |
+| `POST` | `/redact/preview` | Render each page of an uploaded PDF as a base64 PNG. Returns `{pages: [{image, width, height}]}`. Rate-limited by the daily upload quota — returns 429 if the user's limit is exhausted. |
+| `POST` | `/redact/apply` | Apply redaction rectangles to a PDF and return the redacted file. Accepts `file` + `rectangles` (JSON array of `{page, x, y, w, h}` in PDF points). Rate-limited by the daily upload quota. |
 | `PATCH` | `/statements/{id}` | Edit period dates, statement balance, or card name |
 | `DELETE` | `/statements/{id}` | Delete statement and all its transactions |
 | `POST` | `/statements/{id}/transactions` | Add a single transaction to a saved statement. Returns updated `transaction_sum` + `statement_balance` |
