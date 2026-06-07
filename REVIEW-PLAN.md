@@ -1,5 +1,51 @@
 # Review Plan
 
+---
+
+# Staff Review
+
+Feedback from CSE 190/291 TA review (June 2026).
+
+## 1. Apply daily upload limit to `/redact/preview` and `/redact/apply`
+
+Currently the rate limit only guards `POST /statements/upload` (the LLM extraction step). The two redaction endpoints are unprotected, allowing the limit to be bypassed.
+
+**Status**: Done — added `_check_upload_limit()` helper in `backend/routers/redact.py` that checks today's usage count against `DAILY_UPLOAD_LIMIT`; called at the top of both endpoints, returns 429 if limit is reached. The PDF load (preview) is the practical gate — users can't start the redaction flow at all if their quota is exhausted.
+
+---
+
+## 2. Allow custom date ranges in the spending view
+
+The Transactions page period selector only supports predefined ranges. Users should be able to enter arbitrary start/end dates to filter their spending.
+
+**Status**: Done — extracted a shared `PeriodSelector` component (`frontend/src/components/PeriodSelector.jsx`) with Month / 3 Mo / Year / Custom modes; Custom mode replaces the nav arrows with two date inputs pre-populated from the current period bounds. Applied uniformly to Dashboard, Transactions, and Statements pages. All filtering is client-side.
+
+---
+
+## 3. Make it explicit in the UI that PDF blackboxing runs client-side
+
+Users may assume the redaction step sends their PDF to a server or AI. The UI should clearly communicate that drawing redaction boxes and downloading the redacted PDF happens entirely in the browser — no data leaves the device at that stage.
+
+**Status**: Done — redaction is intentionally server-side; the backend handles all business logic and file processing while the client is purely responsible for rendering the interface and displaying data to the user. PyMuPDF properly burns pixels and strips the underlying text layer, which browser-side libraries cannot do as reliably. The UI infoBar in `frontend/src/pages/Upload.jsx` now explicitly states that no AI is involved in this step — redaction is handled by a PDF library on the server, and anything blacked out is never seen by the AI.
+
+---
+
+## 4. Support image files (JPG/PNG) for statements/receipts
+
+The upload flow currently only accepts PDFs. Users should be able to upload JPG or PNG images of statements or receipts and have them processed the same way.
+
+**Status**: To do
+
+---
+
+## 5. Ship the admin analytics view
+
+The admin analytics dashboard is built and guarded behind `is_admin`, but was flagged as "planned" in the review. Confirm it is fully functional and visible to the reviewer.
+
+**Status**: To do
+
+---
+
 ## Feedback & Response
 
 - **Same PDF blocked across users**

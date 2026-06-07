@@ -493,7 +493,8 @@ export default function Upload({ onPhaseChange, onClose } = {}) {
         <strong>Optional:</strong> drag to draw a black box over anything you want to hide
         from the AI — account numbers, your name, address, etc. The AI is already instructed
         to ignore sensitive fields, but redacting gives you full control. Click any box to remove it.
-        When ready, hit <em>Extract transactions</em>.
+        No AI is involved in this step — redaction is handled by a PDF library on our server,
+        and anything you black out is never seen by the AI.
       </div>
       <div className={styles.toolbar}>
         <span className={styles.filename}>{file.name}</span>

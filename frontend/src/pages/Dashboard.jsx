@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getTransactions } from "../api/transactions";
 import { useTheme } from "../ThemeContext";
 import { useDataRefresh } from "../DataRefreshContext";
-import { getPeriodBounds, getPeriodLabel, makePeriodNav } from "../utils/period";
+import PeriodSelector from "../components/PeriodSelector";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList,
   PieChart, Pie,
@@ -181,9 +181,7 @@ export default function Dashboard() {
   const [loading, setLoading]           = useState(true);
   const [error, setError]               = useState("");
 
-  const [periodMode, setPeriodMode] = useState("month");
-  const [anchor, setAnchor]         = useState({ year: now.getFullYear(), month: now.getMonth() });
-  const { goBack, goForward, isAtNow } = makePeriodNav(anchor, setAnchor);
+  const [range, setRange] = useState({ start: "", end: "" });
 
   const [catType,    setCatType]    = useState("bar");
   const [catMetric,  setCatMetric]  = useState("spend");
@@ -198,8 +196,10 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, [refreshKey]);
 
-  const { start, end } = getPeriodBounds(periodMode, anchor);
-  const filtered = transactions.filter(t => t.date >= start && t.date <= end);
+  const { start, end } = range;
+  const filtered = start && end
+    ? transactions.filter(t => t.date >= start && t.date <= end)
+    : transactions;
   const totalSpend = filtered.reduce((s, t) => s + parseFloat(t.amount), 0);
 
   const catMap = {};
@@ -237,34 +237,11 @@ export default function Dashboard() {
     );
   }
 
-  const periodModes = [
-    { v: "month",    l: "Month" },
-    { v: "3months",  l: "3 Mo"  },
-    { v: "12months", l: "Year"  },
-  ];
-
   return (
     <div className={styles.page}>
       <div className={styles.pageHeader}>
         <h1>Dashboard</h1>
-        <div className={styles.periodControls}>
-          <div className={styles.modeGroup}>
-            {periodModes.map(({ v, l }) => (
-              <button
-                key={v}
-                className={periodMode === v ? `${styles.modeBtn} ${styles.modeBtnActive}` : styles.modeBtn}
-                onClick={() => setPeriodMode(v)}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          <div className={styles.navGroup}>
-            <button className={styles.navBtn} onClick={goBack}>‹</button>
-            <span className={styles.periodLabel}>{getPeriodLabel(periodMode, anchor)}</span>
-            <button className={styles.navBtn} onClick={goForward} disabled={isAtNow}>›</button>
-          </div>
-        </div>
+        <PeriodSelector onChange={setRange} />
       </div>
 
       <div className={styles.statRow}>

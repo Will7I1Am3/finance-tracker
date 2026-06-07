@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getStatements, deleteStatement } from "../api/statements";
 import { getCards } from "../api/cards";
 import StatementCard from "../components/StatementCard";
+import PeriodSelector from "../components/PeriodSelector";
 import { useDataRefresh } from "../DataRefreshContext";
 import styles from "./Statements.module.css";
 
@@ -13,6 +14,7 @@ export default function Statements() {
   const [expandedId, setExpandedId] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState({ start: "", end: "" });
 
   useEffect(() => {
     getCards().then(setCards).catch(() => {});
@@ -25,6 +27,11 @@ export default function Statements() {
       .catch(() => setError("Failed to load statements."))
       .finally(() => setLoading(false));
   }, [filterCard, refreshKey]);
+
+  const { start, end } = range;
+  const filtered = start && end
+    ? statements.filter(s => s.period_start >= start && s.period_start <= end)
+    : statements;
 
   function toggleExpand(id) {
     setExpandedId(prev => (prev === id ? null : id));
@@ -53,30 +60,33 @@ export default function Statements() {
           <h1>Statements</h1>
           {!loading && (
             <p className={styles.count}>
-              {statements.length} statement{statements.length !== 1 ? "s" : ""}
+              {filtered.length} statement{filtered.length !== 1 ? "s" : ""}
             </p>
           )}
         </div>
-        <select
-          value={filterCard}
-          onChange={e => { setFilterCard(e.target.value); setExpandedId(null); }}
-        >
-          <option value="">All cards</option>
-          {cards.map(c => (
-            <option key={c.id} value={c.name}>{c.name}</option>
-          ))}
-        </select>
+        <div className={styles.controls}>
+          <select
+            value={filterCard}
+            onChange={e => { setFilterCard(e.target.value); setExpandedId(null); }}
+          >
+            <option value="">All cards</option>
+            {cards.map(c => (
+              <option key={c.id} value={c.name}>{c.name}</option>
+            ))}
+          </select>
+          <PeriodSelector onChange={setRange} />
+        </div>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
 
       {loading ? (
         <p className={styles.muted}>Loading…</p>
-      ) : statements.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <p className={styles.muted}>No statements found.</p>
       ) : (
         <div className={styles.list}>
-          {statements.map(s => (
+          {filtered.map(s => (
             <StatementCard
               key={s.id}
               s={s}

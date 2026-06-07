@@ -1,5 +1,5 @@
 import os
-from datetime import date
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
 
@@ -41,7 +41,7 @@ def get_usage(user: dict = Depends(get_current_user)) -> dict:
     conn = get_connection()
     row = conn.execute(
         "SELECT upload_count FROM usage WHERE user_id = %s AND date = %s",
-        (user["user_id"], date.today()),
+        (user["user_id"], datetime.now(timezone.utc).date()),
     ).fetchone()
     conn.close()
     return {"used": row["upload_count"] if row else 0, "limit": _DAILY_LIMIT}
@@ -91,7 +91,7 @@ async def upload_statement(
     conn = get_connection()
 
     # Rate limit check + increment (atomic within same connection)
-    today = date.today()
+    today = datetime.now(timezone.utc).date()
     usage_row = conn.execute(
         "SELECT upload_count FROM usage WHERE user_id = %s AND date = %s",
         (user["user_id"], today),

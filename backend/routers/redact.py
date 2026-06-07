@@ -1,13 +1,29 @@
 import base64
 import json
+import os
+from datetime import datetime, timezone
 
 import fitz
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 
+from database import get_connection
 from deps import get_current_user
 
 router = APIRouter(prefix="/redact", tags=["redact"])
+
+_DAILY_LIMIT = int(os.environ.get("DAILY_UPLOAD_LIMIT", "10"))
+
+
+def _check_upload_limit(user: dict) -> None:
+    conn = get_connection()
+    row = conn.execute(
+        "SELECT upload_count FROM usage WHERE user_id = %s AND date = %s",
+        (user["user_id"], datetime.now(timezone.utc).date()),
+    ).fetchone()
+    conn.close()
+    if (row["upload_count"] if row else 0) >= _DAILY_LIMIT:
+        raise HTTPException(status_code=429, detail=f"Daily upload limit of {_DAILY_LIMIT} reached.")
 
 _RENDER_SCALE = 2.0  # render pages at 2× resolution for sharpness
 
@@ -18,6 +34,8 @@ async def preview_pdf(
     user: dict = Depends(get_current_user),
 ) -> dict:
     """Render every page of the uploaded PDF as a base64 PNG."""
+    _check_upload_limit(user)
+
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
 
@@ -43,6 +61,8 @@ async def apply_redactions(
     user: dict = Depends(get_current_user),
 ) -> Response:
     """Apply redaction rectangles to the PDF and return the redacted file."""
+    _check_upload_limit(user)
+
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
 

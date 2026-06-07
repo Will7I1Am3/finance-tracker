@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from fastapi import APIRouter, Depends, Query
@@ -15,21 +15,17 @@ def _resolve_tz(tz_str: str) -> str:
         return "UTC"
 
 
-def _today_in_tz(tz_str: str) -> date:
-    return datetime.now(ZoneInfo(_resolve_tz(tz_str))).date()
+def _today_utc():
+    return datetime.now(timezone.utc).date()
 
 
-def _range_start(range_str: str, tz_str: str) -> date | None:
-    today = _today_in_tz(tz_str)
+def _range_start(range_str: str, _tz_str: str = "UTC"):
+    today = _today_utc()
     if range_str == "7d":
         return today - timedelta(days=7)
     if range_str == "30d":
         return today - timedelta(days=30)
     return None
-
-
-# SQL fragment: cast the stored UTC date to a timestamptz then convert to local date.
-_LOCAL_DATE = "DATE(date::timestamptz AT TIME ZONE %(tz)s)"
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -50,17 +46,15 @@ def _estimate_cost(input_tokens: int, output_tokens: int, upload_count: int) -> 
 
 @router.get("/stats")
 def get_stats(tz: str = Query(default="UTC"), _admin: dict = Depends(get_admin_user)) -> dict:
-    tz = _resolve_tz(tz)
-    today_local = _today_in_tz(tz)
-    week_start = today_local - timedelta(days=7)
+    week_start = _today_utc() - timedelta(days=7)
     conn = get_connection()
 
     total_users = conn.execute("SELECT COUNT(*) AS n FROM users").fetchone()["n"]
     total_statements = conn.execute("SELECT COUNT(*) AS n FROM statements").fetchone()["n"]
     total_llm_calls = conn.execute("SELECT COALESCE(SUM(upload_count), 0) AS n FROM usage").fetchone()["n"]
     active_this_week = conn.execute(
-        f"SELECT COUNT(DISTINCT user_id) AS n FROM usage WHERE {_LOCAL_DATE} >= %(start)s",
-        {"tz": tz, "start": week_start},
+        "SELECT COUNT(DISTINCT user_id) AS n FROM usage WHERE date >= %s",
+        (week_start,),
     ).fetchone()["n"]
 
     conn.close()
@@ -80,21 +74,20 @@ def list_users(
     tz: str = Query(default="UTC"),
     _admin: dict = Depends(get_admin_user),
 ) -> list[dict]:
-    tz = _resolve_tz(tz)
-    today_local = _today_in_tz(tz)
+    today_utc = _today_utc()
     conn = get_connection()
 
-    query = f"""
+    query = """
         SELECT
             u.id,
             u.email,
             u.created_at,
-            COALESCE(SUM(CASE WHEN {_LOCAL_DATE} = %(today_local)s THEN ug.upload_count ELSE 0 END), 0) AS uploads_today,
-            COALESCE(SUM(ug.upload_count), 0)                                                           AS uploads_total,
-            COALESCE(SUM(ug.input_tokens), 0)                                                           AS input_tokens,
-            COALESCE(SUM(ug.output_tokens), 0)                                                          AS output_tokens,
-            (SELECT COUNT(*) FROM statements s WHERE s.user_id = u.id)                                  AS statement_count,
-            MAX({_LOCAL_DATE})                                                                           AS last_active
+            COALESCE(SUM(CASE WHEN ug.date = %(today_utc)s THEN ug.upload_count ELSE 0 END), 0) AS uploads_today,
+            COALESCE(SUM(ug.upload_count), 0)                                                    AS uploads_total,
+            COALESCE(SUM(ug.input_tokens), 0)                                                    AS input_tokens,
+            COALESCE(SUM(ug.output_tokens), 0)                                                   AS output_tokens,
+            (SELECT COUNT(*) FROM statements s WHERE s.user_id = u.id)                           AS statement_count,
+            MAX(ug.date)                                                                          AS last_active
         FROM users u
         LEFT JOIN usage ug ON ug.user_id = u.id
     """
@@ -102,7 +95,7 @@ def list_users(
         query += " WHERE u.email ILIKE %(search)s"
     query += " GROUP BY u.id, u.email, u.created_at ORDER BY last_active DESC NULLS LAST"
 
-    rows = conn.execute(query, {"tz": tz, "today_local": today_local, "search": f"%{search}%"}).fetchall()
+    rows = conn.execute(query, {"today_utc": today_utc, "search": f"%{search}%"}).fetchall()
     conn.close()
 
     return [
@@ -126,16 +119,15 @@ def site_activity(
 
     if start:
         rows = conn.execute(
-            f"SELECT {_LOCAL_DATE} AS local_date, SUM(upload_count) AS uploads"
-            f" FROM usage WHERE {_LOCAL_DATE} >= %(start)s"
-            f" GROUP BY local_date ORDER BY local_date",
-            {"tz": tz, "start": start},
+            "SELECT date AS local_date, SUM(upload_count) AS uploads"
+            " FROM usage WHERE date >= %s"
+            " GROUP BY date ORDER BY date",
+            (start,),
         ).fetchall()
     else:
         rows = conn.execute(
-            f"SELECT {_LOCAL_DATE} AS local_date, SUM(upload_count) AS uploads"
-            f" FROM usage GROUP BY local_date ORDER BY local_date",
-            {"tz": tz},
+            "SELECT date AS local_date, SUM(upload_count) AS uploads"
+            " FROM usage GROUP BY date ORDER BY date",
         ).fetchall()
 
     conn.close()
@@ -192,16 +184,16 @@ def user_activity(
     start = _range_start(range, tz)
     if start:
         rows = conn.execute(
-            f"SELECT {_LOCAL_DATE} AS local_date, upload_count AS uploads"
-            f" FROM usage WHERE user_id = %(uid)s AND {_LOCAL_DATE} >= %(start)s"
-            f" ORDER BY local_date",
-            {"tz": tz, "uid": user_id, "start": start},
+            "SELECT date AS local_date, upload_count AS uploads"
+            " FROM usage WHERE user_id = %s AND date >= %s"
+            " ORDER BY date",
+            (user_id, start),
         ).fetchall()
     else:
         rows = conn.execute(
-            f"SELECT {_LOCAL_DATE} AS local_date, upload_count AS uploads"
-            f" FROM usage WHERE user_id = %(uid)s ORDER BY local_date",
-            {"tz": tz, "uid": user_id},
+            "SELECT date AS local_date, upload_count AS uploads"
+            " FROM usage WHERE user_id = %s ORDER BY date",
+            (user_id,),
         ).fetchall()
 
     conn.close()
@@ -218,20 +210,24 @@ def site_costs(
     start = _range_start(range, tz)
     conn = get_connection()
 
-    params = {"tz": tz}
-    where = f"WHERE {_LOCAL_DATE} >= %(start)s" if start else ""
     if start:
-        params["start"] = start
-
-    rows = conn.execute(
-        f"SELECT {_LOCAL_DATE} AS local_date,"
-        f" COALESCE(SUM(upload_count), 0) AS uploads,"
-        f" COALESCE(SUM(input_tokens), 0) AS input_tokens,"
-        f" COALESCE(SUM(output_tokens), 0) AS output_tokens"
-        f" FROM usage {where}"
-        f" GROUP BY local_date ORDER BY local_date",
-        params,
-    ).fetchall()
+        rows = conn.execute(
+            "SELECT date AS local_date,"
+            " COALESCE(SUM(upload_count), 0) AS uploads,"
+            " COALESCE(SUM(input_tokens), 0) AS input_tokens,"
+            " COALESCE(SUM(output_tokens), 0) AS output_tokens"
+            " FROM usage WHERE date >= %s"
+            " GROUP BY date ORDER BY date",
+            (start,),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT date AS local_date,"
+            " COALESCE(SUM(upload_count), 0) AS uploads,"
+            " COALESCE(SUM(input_tokens), 0) AS input_tokens,"
+            " COALESCE(SUM(output_tokens), 0) AS output_tokens"
+            " FROM usage GROUP BY date ORDER BY date",
+        ).fetchall()
     conn.close()
 
     result = []
@@ -257,8 +253,8 @@ def reset_usage(user_id: int, _admin: dict = Depends(get_admin_user)) -> dict:
         raise HTTPException(status_code=404, detail="User not found")
 
     conn.execute(
-        "UPDATE usage SET upload_count = 0 WHERE user_id = %s AND date = CURRENT_DATE",
-        (user_id,),
+        "UPDATE usage SET upload_count = 0 WHERE user_id = %s AND date = %s",
+        (user_id, _today_utc()),
     )
     conn.commit()
     conn.close()
